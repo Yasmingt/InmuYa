@@ -1,0 +1,124 @@
+/* RESET Y VARIABLES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+:root {
+    --color-principal: #fff;
+    --color-secundario: #072638;
+    --color-terciario: #4883A5;
+    --color-gris: #555;
+    --color-blanco: #fff;
+    --color-negro: #222;
+    --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body.admin-body {
+    font-family: var(--fuente-principal);
+    line-height: 1.6;
+    color: var(--color-gris);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* HEADER ADMIN */
+.header.admin-header {
+    background: var(--color-blanco);
+    background-position: center;
+}
+.header.admin-header .contenido-header {
+    width: 100%;
+}
+.header.admin-header .barra {
+    width: 100%;
+    margin: 1rem 1rem;
+    display: grid;
+    grid-template-columns: 120px 1fr 220px;
+}
+.header-logo-panel {
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+}
+.header-logo-panel img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+.header-logo-panel span {
+    font-size: 0.5rem;
+    font-weight: bold;
+    color: var(--color-secundario);
+    
+}
+
+.navegacion-principal {
+    width: 100%;
+    margin-left: 2rem;
+}
+.menu-navegacion {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.menu-navegacion li a {
+    color: var(--color-secundario);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    color: var(--color-segundario);
+}
+.user-name {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.user-role {
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+}
+@media (max-width: 900px) {
+    .header.admin-header .barra {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        height: auto;
+    }
+    .header-logo-panel, .header-user-info {
+        justify-content: center;
+        flex: 0 0 auto;
+        margin-bottom: 0.5rem;
+    }
+    .header-menu {
+        justify-content: center;
+        flex: 1 1 100%;
+    }
+    .menu-navegacion {
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+    }
+}
+
+
