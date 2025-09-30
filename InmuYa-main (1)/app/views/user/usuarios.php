@@ -5,7 +5,7 @@
  */
 
 // Definir variables para el layout
-$title = 'Gestión de Usuarios - Panel de Administración';
+$title = 'Gestión de Usuarios';
 $description = 'Administrar usuarios del sistema';
 $pageTitle = 'Gestión de Usuarios';
 
@@ -25,28 +25,25 @@ include __DIR__ . '/../layouts/admin.php';
             <p>Administra todos los usuarios del sistema</p>
         </div>
         <div class="header-right">
-            <button class="btn btn-primary">
+            <a href="<?php echo BASE_URL; ?>index.php?route=user/new" class="btn btn-primary">
                 <i class="fas fa-plus"></i>
                 Nuevo Usuario
-            </button>
+            </a>
         </div>
     </div>
 
-    <!-- Filtros y búsqueda -->
-    <div class="filters-section">
-        <div class="filters-row">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar usuarios..." id="userSearch">
-            </div>
-            <div class="filter-group">
-                <select id="typeFilter">
-                    <option value="">Todos los tipos</option>
-                    <option value="cliente">Cliente</option>
-                    <option value="propietario">Propietario</option>
-                    <option value="admin">Administrador</option>
-                </select>
-            </div>
+    <div id="deleteConfirmation" style="display: none; background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; margin: 10px 0; border-radius: 8px; text-align: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 20px;"></i>
+            <span id="confirmationMessage"></span>
+        </div>
+        <div style="margin-top: 10px;">
+            <button id="confirmDelete" class="btn btn-danger" style="margin-right: 10px;">
+                <i class="fas fa-trash"></i> Sí, Eliminar
+            </button>
+            <button id="cancelDelete" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancelar
+            </button>
         </div>
     </div>
 
@@ -65,13 +62,13 @@ include __DIR__ . '/../layouts/admin.php';
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($users)): ?>
-                        <?php foreach ($users as $user): ?>
+                    <?php if (!empty($usuarios)): ?>
+                        <?php foreach ($usuarios as $user): ?>
                             <tr data-user-id="<?php echo $user['id_usuario']; ?>">
                                 <td>
                                     <div class="user-info">
                                         <span class="user-name"><?php echo htmlspecialchars($user['nombre']); ?></span>
-                                        <span class="user-id">ID: <?php echo $user['id_usuario']; ?></span>
+                                        <span class="user-numeroIdentidad"><?php echo $user['numerodocumento']; ?></span>
                                     </div>
                                 </td>
                                 <td>
@@ -119,7 +116,7 @@ include __DIR__ . '/../layouts/admin.php';
     <!-- Paginación -->
     <div class="pagination-section">
         <div class="pagination-info">
-            <span>Mostrando 1-<?php echo count($users); ?> de <?php echo count($users); ?> usuarios</span>
+            <span>Mostrando 1-<?php echo count($usuarios); ?> de <?php echo count($usuarios); ?> usuarios</span>
         </div>
         <div class="pagination">
             <button class="btn-pagination" disabled>
@@ -138,67 +135,145 @@ include __DIR__ . '/../layouts/admin.php';
 <!-- Scripts específicos -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Búsqueda de usuarios
-    const searchInput = document.getElementById('userSearch');
-    const usersTable = document.getElementById('usersTable');
     
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const rows = usersTable.querySelectorAll('tbody tr');
-        
-        rows.forEach(row => {
-            const userName = row.querySelector('.user-name').textContent.toLowerCase();
-            const userEmail = row.querySelector('.user-email').textContent.toLowerCase();
-            
-            if (userName.includes(searchTerm) || userEmail.includes(searchTerm)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-    });
-    
-    // Filtros
-    const typeFilter = document.getElementById('typeFilter');
-    
-    function applyFilters() {
-        const typeValue = typeFilter.value;
-        const rows = usersTable.querySelectorAll('tbody tr');
-        
-        rows.forEach(row => {
-            let showRow = true;
-            
-            if (typeValue) {
-                const userType = row.querySelector('.badge').textContent.toLowerCase();
-                if (userType !== typeValue) {
-                    showRow = false;
-                }
-            }
-            
-            row.style.display = showRow ? '' : 'none';
-        });
-    }
-    
-    typeFilter.addEventListener('change', applyFilters);
-    
-    // Los checkboxes han sido removidos de la tabla
     
     // Botones de acción
     document.querySelectorAll('.btn-edit').forEach(button => {
         button.addEventListener('click', function() {
             const userId = this.dataset.userId;
-            // Aquí iría la lógica para cargar los datos del usuario en el modal
-            document.getElementById('editUserModal').classList.add('show');
+            // Redirigir a la página de edición
+            window.location.href = `<?php echo BASE_URL; ?>index.php?route=user/edit&id=${userId}`;
         });
     });
     
-    // Cerrar modal
-    document.querySelector('.modal-close').addEventListener('click', function() {
-        document.getElementById('editUserModal').classList.remove('show');
+    // Variables globales para el proceso de eliminación
+    let userToDelete = null;
+    let deleteButton = null;
+    
+    // Botones de eliminar
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            const userName = this.closest('tr').querySelector('.user-name').textContent;
+            const userDocumento = this.closest('tr').querySelector('.user-numeroIdentidad').textContent;
+            
+            // Guardar referencia al botón y usuario
+            userToDelete = userId;
+            deleteButton = this;
+            
+            // Mostrar mensaje de confirmación
+            document.getElementById('confirmationMessage').textContent = 
+                `¿Estás seguro de que quieres eliminar al usuario "${userName}" (Documento: ${userDocumento})?`;
+            document.getElementById('deleteConfirmation').style.display = 'block';
+            
+            // Scroll hacia arriba para mostrar el mensaje
+            document.getElementById('deleteConfirmation').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start' 
+            });
+        });
     });
     
-    document.querySelector('.modal-cancel').addEventListener('click', function() {
-        document.getElementById('editUserModal').classList.remove('show');
+    // Botón de confirmar eliminación
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        if (userToDelete && deleteButton) {
+            // Petición AJAX para eliminar el usuario
+            fetch('<?php echo BASE_URL; ?>index.php?route=user/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user_id=${userToDelete}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Eliminar la fila de la tabla
+                    const row = deleteButton.closest('tr');
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateY(-10px)';
+                    
+                    setTimeout(() => {
+                        row.remove();
+                        showNotification(data.message, 'success');
+                    }, 300);
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Error al eliminar el usuario', 'error');
+            })
+            .finally(() => {
+                // Ocultar mensaje de confirmación
+                document.getElementById('deleteConfirmation').style.display = 'none';
+                userToDelete = null;
+                deleteButton = null;
+            });
+        }
     });
+    
+    // Botón de cancelar eliminación
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        document.getElementById('deleteConfirmation').style.display = 'none';
+        userToDelete = null;
+        deleteButton = null;
+    });
+    
+    // Sistema de notificaciones
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        
+        const colors = {
+            success: '#28a745',
+            error: '#dc3545',
+            info: '#17a2b8',
+            warning: '#ffc107'
+        };
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            background-color: ${colors[type] || colors.info};
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: slideInRight 0.3s ease-out;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease-out';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+    
+    // Mostrar notificación de éxito si viene de una actualización
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === '1') {
+        showNotification('Usuario actualizado correctamente', 'success');
+    }
+    
+    // Añadir estilos para animaciones
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
 });
 </script>

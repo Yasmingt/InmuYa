@@ -43,37 +43,8 @@ class AdminController {
         $stats = $this->userModel->getUserStats();
         
         // Obtener usuarios recientes (últimos 5)
-        $recent_users = $this->userModel->getAllUsers(5);
-        
-        // Simular datos adicionales (en un sistema real vendrían de otros modelos)
-        $stats['total_properties'] = 25;
-        $stats['total_contacts'] = 150;
-        $stats['total_views'] = 1250;
-        
-        // Actividad reciente simulada
-        $recent_activity = [
-            [
-                'icon' => 'user-plus',
-                'description' => 'Nuevo usuario registrado: ' . ($recent_users[0]['nombre'] ?? 'Usuario'),
-                'time' => 'Hace 5 minutos'
-            ],
-            [
-                'icon' => 'building',
-                'description' => 'Nueva propiedad agregada',
-                'time' => 'Hace 1 hora'
-            ],
-            [
-                'icon' => 'envelope',
-                'description' => 'Nuevo mensaje de contacto',
-                'time' => 'Hace 2 horas'
-            ],
-            [
-                'icon' => 'chart-line',
-                'description' => 'Reporte generado',
-                'time' => 'Hace 3 horas'
-            ]
-        ];
-        
+        $recent_users = $this->userModel->getAllUsers(4);
+         
         // Incluir la vista del dashboard
         include __DIR__ . '/../views/admin/dashboard.php';
     }

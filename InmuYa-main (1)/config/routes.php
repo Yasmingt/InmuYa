@@ -88,9 +88,11 @@ $routes = [
         'layout' => 'admin'
     ],
     
+
+    // Gestión de Usuarios
     'user/usuarios' => [
-        'controller' => 'AdminController',
-        'action' => 'usuarios',
+        'controller' => 'UserController',
+        'action' => 'showUsers',
         'view' => 'user/usuarios.php',
         'layout' => 'admin'
     ],

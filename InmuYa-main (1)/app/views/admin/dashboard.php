@@ -62,6 +62,11 @@ include __DIR__ . '/../layouts/admin.php';
                     </button>
                 </div>
             </div>
+            <div class="card-content">
+                <div class="chart-container">
+                    <canvas id="usersChart"></canvas>
+                </div>
+            </div>
         </div>
 
         <!-- Usuarios recientes -->
@@ -135,6 +140,9 @@ include __DIR__ . '/../layouts/admin.php';
 <!-- Scripts específicos del dashboard -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Debug: mostrar datos de estadísticas
+    console.log('Stats data:', <?php echo json_encode($stats); ?>);
+    
     // Gráfico de usuarios por tipo
     const ctx = document.getElementById('usersChart').getContext('2d');
     const usersChart = new Chart(ctx, {
@@ -145,7 +153,7 @@ include __DIR__ . '/../layouts/admin.php';
                 data: [
                     <?php echo $stats['by_type']['cliente'] ?? 0; ?>,
                     <?php echo $stats['by_type']['propietario'] ?? 0; ?>,
-                    <?php echo $stats['by_type']['admistrativo'] ?? 0; ?>
+                    <?php echo $stats['by_type']['administrativo'] ?? 0; ?>
                 ],
                 backgroundColor: [
                     '#3B82F6',

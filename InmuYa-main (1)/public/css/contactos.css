@@ -9,39 +9,7 @@
     max-width: 1200px;
     margin: 0 auto;
     background: #f8f9fa;
-    min-height: 100vh;
-}
-
-/* ===== HEADER DE LA PÁGINA ===== */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid #e9ecef;
-    background: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.header-left h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 0.5rem;
-}
-
-.header-left p {
-    font-size: 1rem;
-    color: #666;
-    margin: 0;
-}
-
-.header-right {
-    display: flex;
-    gap: 1rem;
+    min-height: calc(100vh - 80px);
 }
 
 /* ===== SECCIÓN DE FILTROS ===== */
@@ -425,15 +393,6 @@
         padding: 1rem;
     }
     
-    .page-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-    }
-    
-    .header-right {
-        justify-content: center;
-    }
     
     .filters-row {
         grid-template-columns: 1fr;

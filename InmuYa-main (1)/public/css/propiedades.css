@@ -25,43 +25,7 @@
 .propiedades-content {
     padding: 2rem;
     background: var(--color-gris-claro);
-    min-height: 100vh;
-}
-
-/* ===== HEADER DE LA PÁGINA ===== */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding: 2rem;
-    background: var(--color-blanco);
-    border-radius: var(--border-radius);
-    box-shadow: var(--sombra-suave);
-    position: relative;
-    overflow: hidden;
-}
-
-.page-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--color-secundario), var(--color-terciario));
-}
-
-.header-left h2 {
-    color: var(--color-secundario);
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
-
-.header-left p {
-    color: var(--color-gris);
-    font-size: 1.1rem;
+    min-height: calc(100vh - 80px);
 }
 
 /* ===== BOTÓN PRINCIPAL ===== */
@@ -496,12 +460,6 @@
         padding: 1rem;
     }
     
-    .page-header {
-        flex-direction: column;
-        gap: 1.5rem;
-        text-align: center;
-    }
-    
     .filters-row {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -539,14 +497,6 @@
 @media (max-width: 480px) {
     .propiedades-content {
         padding: 0.5rem;
-    }
-    
-    .page-header {
-        padding: 1.5rem;
-    }
-    
-    .header-left h2 {
-        font-size: 1.5rem;
     }
     
     .filters-section {

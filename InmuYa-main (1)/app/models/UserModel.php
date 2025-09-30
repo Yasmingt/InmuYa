@@ -80,6 +80,9 @@ class UserModel {
      * Crear nuevo usuario
      */
     public function createUser($data) {
+        // Generar un ID único para el usuario
+        $id_usuario = $this->generateUserId();
+        
         $sql = "INSERT INTO usuarios (id_usuario, nombre, email, telefono, tipodocumento, numerodocumento, fechadenacimiento, contrasena, tipo_usuario) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
@@ -90,7 +93,7 @@ class UserModel {
         }
         
         $stmt->bind_param("isssissss", 
-            $data['id_usuario'], 
+            $id_usuario, 
             $data['nombre'], 
             $data['email'], 
             $data['telefono'], 
@@ -108,6 +111,23 @@ class UserModel {
         }
         
         return $result;
+    }
+    
+    /**
+     * Generar un ID único para el usuario
+     */
+    private function generateUserId() {
+        // Obtener el último ID usado
+        $sql = "SELECT MAX(id_usuario) as max_id FROM usuarios";
+        $result = $this->conexion->query($sql);
+        
+        if ($result && $row = $result->fetch_assoc()) {
+            $max_id = $row['max_id'] ?? 0;
+            return $max_id + 1;
+        }
+        
+        // Si no hay usuarios, empezar desde 1
+        return 1;
     }
     
     /**
@@ -176,19 +196,22 @@ class UserModel {
      * Obtener todos los usuarios
      */
     public function getAllUsers($limit = null, $offset = 0) {
-        $sql = "SELECT * FROM usuarios ORDER BY id_usuario DESC";
+        $sql = "SELECT * FROM usuarios ORDER BY nombre ASC";
         
         if ($limit) {
             $sql .= " LIMIT ? OFFSET ?";
             $stmt = $this->conexion->prepare($sql);
+            
             if (!$stmt) {
-                throw new Exception("Error en la consulta SQL: " . $this->conexion->error);
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
             }
+            
             $stmt->bind_param("ii", $limit, $offset);
         } else {
             $stmt = $this->conexion->prepare($sql);
+            
             if (!$stmt) {
-                throw new Exception("Error en la consulta SQL: " . $this->conexion->error);
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
             }
         }
         

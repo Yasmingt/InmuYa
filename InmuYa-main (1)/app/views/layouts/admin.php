@@ -8,14 +8,17 @@
     <link rel="icon" type="image/jpeg" href="<?php echo BASE_URL; ?>public/img/logo.jpeg">
     
     <!-- CSS específico para admin -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/app.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css">
     
     <!-- CSS específico por página -->
-    <?php if (isset($pageTitle) && strpos($pageTitle, 'Contactos') !== false): ?>
-        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/contactos.css">
-    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Dashboard') !== false): ?>
+    <?php if (isset($pageTitle) && strpos($pageTitle, 'Dashboard') !== false): ?>
         <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/dashboard.css">
+    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Usuarios') !== false): ?>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/usuarios.css">
+    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Propiedades') !== false): ?>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/propiedades.css">
+    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Contactos') !== false): ?>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/contactos.css">
     <?php endif; ?>
     
     <!-- Font Awesome para iconos -->
@@ -46,32 +49,44 @@
                         <div class="user-details">
                             <span class="user-name"><?php echo $_SESSION['user_name'] ?? 'Usuario'; ?></span>
                         </div>
-                        <div class="user-menu" style="position:relative;">
-                            <button class="user-menu-toggle" style="background:none; border:none; cursor:pointer;" onclick="var dd=this.nextElementSibling; dd.classList.toggle('show'); event.stopPropagation();">
+                        <div class="user-menu">
+                            <button class="user-menu-toggle">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
-                            <ul class="user-dropdown" style="display:none; position:absolute; right:0; top:100%; background:var(--color-blanco); border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:0.5rem 0; min-width:180px; z-index:200;">
+                            <ul class="user-dropdown">
                                 <li>
                                     <a href="<?php echo BASE_URL; ?>auth/logout">
                                         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                                     </a>
                                 </li>
                             </ul>
-                            <script>
-                            document.addEventListener('click', function(e) {
-                                document.querySelectorAll('.user-dropdown.show').forEach(function(dd){
-                                    dd.classList.remove('show');
-                                });
-                            });
-                            </script>
-                            <style>
-                            .user-dropdown.show { display: block !important; }
-                            </style>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
+
+<script>
+// Toggle del dropdown del usuario
+document.addEventListener('DOMContentLoaded', function() {
+    const userMenuToggle = document.querySelector('.user-menu-toggle');
+    const userDropdown = document.querySelector('.user-dropdown');
+    
+    if (userMenuToggle && userDropdown) {
+        userMenuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+        
+        // Cerrar dropdown al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                userDropdown.classList.remove('show');
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>
