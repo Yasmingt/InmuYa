@@ -21,12 +21,6 @@ include __DIR__ . '/../layouts/admin.php';
             <h2>Gestión de Contactos</h2>
             <p>Administra todos los contactos del sistema</p>
         </div>
-        <div class="header-right">
-            <button class="btn btn-secondary">
-                <i class="fas fa-download"></i>
-                Exportar
-            </button>
-        </div>
     </div>
 
     <!-- Filtros y búsqueda -->
@@ -43,14 +37,6 @@ include __DIR__ . '/../layouts/admin.php';
                     <option value="leido">Leído</option>
                     <option value="respondido">Respondido</option>
                     <option value="cerrado">Cerrado</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <select id="dateFilter">
-                    <option value="">Todas las fechas</option>
-                    <option value="today">Hoy</option>
-                    <option value="week">Esta semana</option>
-                    <option value="month">Este mes</option>
                 </select>
             </div>
         </div>

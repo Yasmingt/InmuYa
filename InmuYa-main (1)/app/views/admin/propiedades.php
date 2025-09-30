@@ -13,6 +13,9 @@ $pageTitle = 'Gestión de Propiedades';
 include __DIR__ . '/../layouts/admin.php';
 ?>
 
+<!-- CSS específico para gestión de propiedades -->
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/propiedades.css">
+
 <!-- Contenido específico de gestión de propiedades -->
 <div class="propiedades-content">
     <!-- Header de la página -->

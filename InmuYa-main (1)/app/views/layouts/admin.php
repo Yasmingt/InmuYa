@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/app.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css">
     
+    <!-- CSS específico por página -->
+    <?php if (isset($pageTitle) && strpos($pageTitle, 'Contactos') !== false): ?>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/contactos.css">
+    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Dashboard') !== false): ?>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/dashboard.css">
+    <?php endif; ?>
+    
     <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -25,7 +32,7 @@
                 <nav class="navegacion-principal">
                     <ul class="menu-navegacion">
                         <li><a href="<?php echo BASE_URL; ?>index.php?route=admin/dashboard">Dashboard</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios.php">Usuarios</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios">Usuarios</a></li>
                         <li><a href="<?php echo BASE_URL; ?>index.php?route=admin/propiedades">Propiedades</a></li>
                         <li><a href="<?php echo BASE_URL; ?>index.php?route=admin/contactos">Contactos</a></li>
                     </ul>

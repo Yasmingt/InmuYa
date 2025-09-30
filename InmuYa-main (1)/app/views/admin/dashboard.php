@@ -26,7 +26,6 @@ include __DIR__ . '/../layouts/admin.php';
             <div class="stat-content">
                 <h3><?php echo $stats['total_users'] ?? '0'; ?></h3>
                 <p>Total Usuarios</p>
-                <span class="stat-change positive">+12% este mes</span>
             </div>
         </div>
 
@@ -37,7 +36,6 @@ include __DIR__ . '/../layouts/admin.php';
             <div class="stat-content">
                 <h3><?php echo $stats['total_properties'] ?? '0'; ?></h3>
                 <p>Propiedades</p>
-                <span class="stat-change positive">+8% este mes</span>
             </div>
         </div>
 
@@ -48,18 +46,6 @@ include __DIR__ . '/../layouts/admin.php';
             <div class="stat-content">
                 <h3><?php echo $stats['total_contacts'] ?? '0'; ?></h3>
                 <p>Contactos</p>
-                <span class="stat-change positive">+15% este mes</span>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="fas fa-eye"></i>
-            </div>
-            <div class="stat-content">
-                <h3><?php echo $stats['total_views'] ?? '0'; ?></h3>
-                <p>Visitas</p>
-                <span class="stat-change positive">+23% este mes</span>
             </div>
         </div>
     </div>
@@ -76,49 +62,6 @@ include __DIR__ . '/../layouts/admin.php';
                     </button>
                 </div>
             </div>
-            <div class="card-content">
-                <div class="chart-container">
-                    <canvas id="usersChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Actividad reciente -->
-        <div class="dashboard-card">
-            <div class="card-header">
-                <h3>Actividad Reciente</h3>
-                <div class="card-actions">
-                    <button class="btn-icon">
-                        <i class="fas fa-refresh"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="activity-list">
-                    <?php if (!empty($recent_activity)): ?>
-                        <?php foreach ($recent_activity as $activity): ?>
-                            <div class="activity-item">
-                                <div class="activity-icon">
-                                    <i class="fas fa-<?php echo $activity['icon']; ?>"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <p><?php echo $activity['description']; ?></p>
-                                    <span class="activity-time"><?php echo $activity['time']; ?></span>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-info-circle"></i>
-                            </div>
-                            <div class="activity-content">
-                                <p>No hay actividad reciente</p>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
         </div>
 
         <!-- Usuarios recientes -->
@@ -126,7 +69,7 @@ include __DIR__ . '/../layouts/admin.php';
             <div class="card-header">
                 <h3>Usuarios Recientes</h3>
                 <div class="card-actions">
-                    <a href="<?php echo BASE_URL; ?>admin/usuarios" class="btn-link">Ver todos</a>
+                    <a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios" class="btn-link">Ver todos</a>
                 </div>
             </div>
             <div class="card-content">
@@ -136,8 +79,6 @@ include __DIR__ . '/../layouts/admin.php';
                             <tr>
                                 <th>Usuario</th>
                                 <th>Tipo</th>
-                                <th>Fecha</th>
-                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -146,9 +87,6 @@ include __DIR__ . '/../layouts/admin.php';
                                     <tr>
                                         <td>
                                             <div class="user-cell">
-                                                <div class="user-avatar-small">
-                                                    <i class="fas fa-user"></i>
-                                                </div>
                                                 <div class="user-info">
                                                     <span class="user-name"><?php echo htmlspecialchars($user['nombre']); ?></span>
                                                     <span class="user-email"><?php echo htmlspecialchars($user['email']); ?></span>
@@ -159,10 +97,6 @@ include __DIR__ . '/../layouts/admin.php';
                                             <span class="badge badge-<?php echo strtolower($user['tipo_usuario']); ?>">
                                                 <?php echo ucfirst($user['tipo_usuario']); ?>
                                             </span>
-                                        </td>
-                                        <td><?php echo date('d/m/Y', strtotime($user['fecha_creacion'] ?? 'now')); ?></td>
-                                        <td>
-                                            <span class="status status-active">Activo</span>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -184,21 +118,13 @@ include __DIR__ . '/../layouts/admin.php';
             </div>
             <div class="card-content">
                 <div class="quick-actions">
-                    <a href="<?php echo BASE_URL; ?>admin/usuarios/nuevo" class="quick-action">
+                    <a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios" class="quick-action">
                         <i class="fas fa-user-plus"></i>
                         <span>Nuevo Usuario</span>
                     </a>
                     <a href="<?php echo BASE_URL; ?>admin/propiedades/nueva" class="quick-action">
                         <i class="fas fa-plus"></i>
                         <span>Nueva Propiedad</span>
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>admin/reportes" class="quick-action">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Ver Reportes</span>
-                    </a>
-                    <a href="<?php echo BASE_URL; ?>admin/configuracion" class="quick-action">
-                        <i class="fas fa-cog"></i>
-                        <span>Configuración</span>
                     </a>
                 </div>
             </div>

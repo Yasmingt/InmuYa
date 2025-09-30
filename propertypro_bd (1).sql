@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-09-2025 a las 05:46:16
+-- Tiempo de generación: 30-09-2025 a las 20:37:53
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -55,20 +55,21 @@ CREATE TABLE `contactar` (
   `nombre` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `asunto` varchar(100) NOT NULL,
-  `mensaje` text NOT NULL
+  `mensaje` text NOT NULL,
+  `estado` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `contactar`
 --
 
-INSERT INTO `contactar` (`id`, `nombre`, `email`, `asunto`, `mensaje`) VALUES
-(1, 'ss', '', 's', 'a'),
-(2, 'yas', 'camilopez@gmail', 'jh', 'jj'),
-(3, 'jmji', 'camiloez@gmail', 'dreyt6', 'y6uh'),
-(4, 'mayerly acevedo', 'acevedomaye@gmail.com', 'wrfedgvre', 'jhnaj jhnsiw c'),
-(5, 'daniel ramirez', 'daniel@gmail.com', 'fedcws', 'edfr4cdf'),
-(6, 'hgthrbrft', 'vaccajuan@gmail.com', 'efdwsef', 'dwsfce34wf');
+INSERT INTO `contactar` (`id`, `nombre`, `email`, `asunto`, `mensaje`, `estado`) VALUES
+(1, 'ss', '', 's', 'a', ''),
+(2, 'yas', 'camilopez@gmail', 'jh', 'jj', ''),
+(3, 'jmji', 'camiloez@gmail', 'dreyt6', 'y6uh', ''),
+(4, 'mayerly acevedo', 'acevedomaye@gmail.com', 'wrfedgvre', 'jhnaj jhnsiw c', ''),
+(5, 'daniel ramirez', 'daniel@gmail.com', 'fedcws', 'edfr4cdf', ''),
+(6, 'hgthrbrft', 'vaccajuan@gmail.com', 'efdwsef', 'dwsfce34wf', '');
 
 -- --------------------------------------------------------
 

@@ -39,6 +39,11 @@ class UserModel {
      */
     public function getUserByEmail($email) {
         $stmt = $this->conexion->prepare("SELECT * FROM usuarios WHERE email = ?");
+        
+        if (!$stmt) {
+            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+        }
+        
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -55,6 +60,11 @@ class UserModel {
      */
     public function getUserById($id) {
         $stmt = $this->conexion->prepare("SELECT * FROM usuarios WHERE id_usuario = ?");
+        
+        if (!$stmt) {
+            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+        }
+        
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -109,6 +119,11 @@ class UserModel {
                 WHERE id_usuario = ?";
         
         $stmt = $this->conexion->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+        }
+        
         $stmt->bind_param("sssisssi", 
             $data['nombre'], 
             $data['email'], 
@@ -131,6 +146,11 @@ class UserModel {
         
         $sql = "UPDATE usuarios SET contrasena = ? WHERE id_usuario = ?";
         $stmt = $this->conexion->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+        }
+        
         $stmt->bind_param("si", $hashedPassword, $id);
         
         return $stmt->execute();
@@ -142,6 +162,11 @@ class UserModel {
     public function deleteUser($id) {
         $sql = "DELETE FROM usuarios WHERE id_usuario = ?";
         $stmt = $this->conexion->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+        }
+        
         $stmt->bind_param("i", $id);
         
         return $stmt->execute();
@@ -187,9 +212,19 @@ class UserModel {
         if ($excludeId) {
             $sql .= " AND id_usuario != ?";
             $stmt = $this->conexion->prepare($sql);
+            
+            if (!$stmt) {
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+            }
+            
             $stmt->bind_param("si", $email, $excludeId);
         } else {
             $stmt = $this->conexion->prepare($sql);
+            
+            if (!$stmt) {
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+            }
+            
             $stmt->bind_param("s", $email);
         }
         
@@ -208,9 +243,19 @@ class UserModel {
         if ($excludeId) {
             $sql .= " AND id_usuario != ?";
             $stmt = $this->conexion->prepare($sql);
+            
+            if (!$stmt) {
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+            }
+            
             $stmt->bind_param("ii", $identificacion, $excludeId);
         } else {
             $stmt = $this->conexion->prepare($sql);
+            
+            if (!$stmt) {
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+            }
+            
             $stmt->bind_param("i", $identificacion);
         }
         
@@ -229,7 +274,7 @@ class UserModel {
         
         // Total de usuarios
         $result = $this->conexion->query("SELECT COUNT(*) as total FROM usuarios");
-        $stats['total'] = $result->fetch_assoc()['total'];
+        $stats['total_users'] = $result->fetch_assoc()['total'];
         
         // Usuarios por tipo
         $result = $this->conexion->query("SELECT tipo_usuario, COUNT(*) as count FROM usuarios GROUP BY tipo_usuario");

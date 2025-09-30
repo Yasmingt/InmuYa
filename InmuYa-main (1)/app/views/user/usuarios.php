@@ -13,6 +13,9 @@ $pageTitle = 'Gestión de Usuarios';
 include __DIR__ . '/../layouts/admin.php';
 ?>
 
+<!-- CSS específico para gestión de usuarios -->
+<link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/usuarios.css">
+
 <!-- Contenido específico de gestión de usuarios -->
 <div class="usuarios-content">
     <!-- Header de la página -->
@@ -41,14 +44,7 @@ include __DIR__ . '/../layouts/admin.php';
                     <option value="">Todos los tipos</option>
                     <option value="cliente">Cliente</option>
                     <option value="propietario">Propietario</option>
-                    <option value="admistrativo">Administrativo</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <select id="statusFilter">
-                    <option value="">Todos los estados</option>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
+                    <option value="admin">Administrador</option>
                 </select>
             </div>
         </div>
@@ -60,15 +56,11 @@ include __DIR__ . '/../layouts/admin.php';
             <table class="data-table" id="usersTable">
                 <thead>
                     <tr>
-                        <th>
-                            <input type="checkbox" id="selectAll">
-                        </th>
                         <th>Usuario</th>
                         <th>Email</th>
                         <th>Tipo</th>
                         <th>Teléfono</th>
-                        <th>Fecha Registro</th>
-                        <th>Estado</th>
+                        <th>Fecha Nacimiento</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -77,17 +69,9 @@ include __DIR__ . '/../layouts/admin.php';
                         <?php foreach ($users as $user): ?>
                             <tr data-user-id="<?php echo $user['id_usuario']; ?>">
                                 <td>
-                                    <input type="checkbox" class="user-checkbox" value="<?php echo $user['id_usuario']; ?>">
-                                </td>
-                                <td>
-                                    <div class="user-cell">
-                                        <div class="user-avatar-small">
-                                            <i class="fas fa-user"></i>
-                                        </div>
-                                        <div class="user-info">
-                                            <span class="user-name"><?php echo htmlspecialchars($user['nombre']); ?></span>
-                                            <span class="user-id">ID: <?php echo $user['id_usuario']; ?></span>
-                                        </div>
+                                    <div class="user-info">
+                                        <span class="user-name"><?php echo htmlspecialchars($user['nombre']); ?></span>
+                                        <span class="user-id">ID: <?php echo $user['id_usuario']; ?></span>
                                     </div>
                                 </td>
                                 <td>
@@ -102,18 +86,12 @@ include __DIR__ . '/../layouts/admin.php';
                                     <span class="user-phone"><?php echo htmlspecialchars($user['telefono']); ?></span>
                                 </td>
                                 <td>
-                                    <span class="user-date"><?php echo date('d/m/Y', strtotime($user['fecha_creacion'] ?? 'now')); ?></span>
-                                </td>
-                                <td>
-                                    <span class="status status-active">Activo</span>
+                                    <span class="user-date"><?php echo date('d/m/Y', strtotime($user['fechadenacimiento'] ?? 'now')); ?></span>
                                 </td>
                                 <td>
                                     <div class="action-buttons">
                                         <button class="btn-icon btn-edit" title="Editar" data-user-id="<?php echo $user['id_usuario']; ?>">
                                             <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-icon btn-view" title="Ver detalles" data-user-id="<?php echo $user['id_usuario']; ?>">
-                                            <i class="fas fa-eye"></i>
                                         </button>
                                         <button class="btn-icon btn-delete" title="Eliminar" data-user-id="<?php echo $user['id_usuario']; ?>">
                                             <i class="fas fa-trash"></i>
@@ -124,7 +102,7 @@ include __DIR__ . '/../layouts/admin.php';
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="text-center">
+                            <td colspan="6" class="text-center">
                                 <div class="empty-state">
                                     <i class="fas fa-users"></i>
                                     <h3>No hay usuarios</h3>
@@ -155,45 +133,7 @@ include __DIR__ . '/../layouts/admin.php';
     </div>
 </div>
 
-<!-- Modal de edición de usuario -->
-<div class="modal" id="editUserModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Editar Usuario</h3>
-            <button class="modal-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="modal-body">
-            <form id="editUserForm">
-                <div class="form-group">
-                    <label for="editNombre">Nombre</label>
-                    <input type="text" id="editNombre" name="nombre" required>
-                </div>
-                <div class="form-group">
-                    <label for="editEmail">Email</label>
-                    <input type="email" id="editEmail" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="editTelefono">Teléfono</label>
-                    <input type="tel" id="editTelefono" name="telefono">
-                </div>
-                <div class="form-group">
-                    <label for="editTipo">Tipo de Usuario</label>
-                    <select id="editTipo" name="tipo_usuario" required>
-                        <option value="cliente">Cliente</option>
-                        <option value="propietario">Propietario</option>
-                        <option value="admistrativo">Administrativo</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary modal-cancel">Cancelar</button>
-            <button class="btn btn-primary modal-save">Guardar Cambios</button>
-        </div>
-    </div>
-</div>
+
 
 <!-- Scripts específicos -->
 <script>
@@ -220,11 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Filtros
     const typeFilter = document.getElementById('typeFilter');
-    const statusFilter = document.getElementById('statusFilter');
     
     function applyFilters() {
         const typeValue = typeFilter.value;
-        const statusValue = statusFilter.value;
         const rows = usersTable.querySelectorAll('tbody tr');
         
         rows.forEach(row => {
@@ -237,29 +175,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            if (statusValue) {
-                const userStatus = row.querySelector('.status').textContent.toLowerCase();
-                if (userStatus !== statusValue) {
-                    showRow = false;
-                }
-            }
-            
             row.style.display = showRow ? '' : 'none';
         });
     }
     
     typeFilter.addEventListener('change', applyFilters);
-    statusFilter.addEventListener('change', applyFilters);
     
-    // Select all checkbox
-    const selectAllCheckbox = document.getElementById('selectAll');
-    const userCheckboxes = document.querySelectorAll('.user-checkbox');
-    
-    selectAllCheckbox.addEventListener('change', function() {
-        userCheckboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-    });
+    // Los checkboxes han sido removidos de la tabla
     
     // Botones de acción
     document.querySelectorAll('.btn-edit').forEach(button => {
