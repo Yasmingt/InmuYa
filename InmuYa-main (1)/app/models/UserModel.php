@@ -299,13 +299,6 @@ class UserModel {
         $result = $this->conexion->query("SELECT COUNT(*) as total FROM usuarios");
         $stats['total_users'] = $result->fetch_assoc()['total'];
         
-        // Usuarios por tipo
-        $result = $this->conexion->query("SELECT tipo_usuario, COUNT(*) as count FROM usuarios GROUP BY tipo_usuario");
-        $stats['by_type'] = [];
-        while ($row = $result->fetch_assoc()) {
-            $stats['by_type'][$row['tipo_usuario']] = $row['count'];
-        }
-        
         return $stats;
     }
 }

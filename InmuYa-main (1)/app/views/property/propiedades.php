@@ -5,16 +5,16 @@
  */
 
 // Definir variables para el layout
-$title = 'Gestión de Propiedades - Panel de Administración';
+$title = 'Gestión de Propiedades';
 $description = 'Administrar propiedades del sistema';
 $pageTitle = 'Gestión de Propiedades';
+$currentPage = 'propiedades';
 
 // Incluir el layout de administrador
 include __DIR__ . '/../layouts/admin.php';
 ?>
 
-<!-- CSS específico para gestión de propiedades -->
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/propiedades.css">
+<!-- CSS específico para gestión de propiedades ya cargado en admin.php -->
 
 <!-- Contenido específico de gestión de propiedades -->
 <div class="propiedades-content">
@@ -29,42 +29,6 @@ include __DIR__ . '/../layouts/admin.php';
                 <i class="fas fa-plus"></i>
                 Nueva Propiedad
             </button>
-        </div>
-    </div>
-
-    <!-- Filtros y búsqueda -->
-    <div class="filters-section">
-        <div class="filters-row">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar propiedades..." id="propertySearch">
-            </div>
-            <div class="filter-group">
-                <select id="typeFilter">
-                    <option value="">Todos los tipos</option>
-                    <option value="casa">Casa</option>
-                    <option value="apartamento">Apartamento</option>
-                    <option value="local">Local</option>
-                    <option value="terreno">Terreno</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <select id="statusFilter">
-                    <option value="">Todos los estados</option>
-                    <option value="disponible">Disponible</option>
-                    <option value="vendida">Vendida</option>
-                    <option value="alquilada">Alquilada</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <select id="priceFilter">
-                    <option value="">Todos los precios</option>
-                    <option value="0-100000">$0 - $100,000</option>
-                    <option value="100000-300000">$100,000 - $300,000</option>
-                    <option value="300000-500000">$300,000 - $500,000</option>
-                    <option value="500000+">$500,000+</option>
-                </select>
-            </div>
         </div>
     </div>
 

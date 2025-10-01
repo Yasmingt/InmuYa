@@ -16,9 +16,32 @@ class UserController {
     }
     
     /**
+     * Verificar acceso de administrador
+     */
+    private function checkAdminAccess() {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Verificar si el usuario está logueado
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: ' . BASE_URL . 'index.php?route=auth/login');
+            exit();
+        }
+        
+        // Verificar si es administrador
+        if ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'administrativo') {
+            header('Location: ' . BASE_URL . 'index.php?route=auth/login');
+            exit();
+        }
+    }
+    
+    /**
      * Mostrar gestión de usuarios para administradores
      */
     public function showUsers() {
+        $this->checkAdminAccess();
+        
         // Obtener todos los usuarios desde la base de datos
         $usuarios = $this->userModel->getAllUsers();
         
@@ -35,6 +58,8 @@ class UserController {
      * Mostrar formulario de creación de usuario
      */
     public function showCreateUser() {
+        $this->checkAdminAccess();
+        
         // Definir variables para el layout
         $title = 'Crear Nuevo Usuario';
         $description = 'Crear nuevo usuario en el sistema';
@@ -48,6 +73,8 @@ class UserController {
      * Mostrar formulario de edición de usuario
      */
     public function showEditUser() {
+        $this->checkAdminAccess();
+        
         $user_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         
         if ($user_id <= 0) {
@@ -76,6 +103,8 @@ class UserController {
      * Procesar actualización de usuario
      */
     public function updateUser() {
+        $this->checkAdminAccess();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
             
@@ -152,6 +181,8 @@ class UserController {
      * Eliminar usuario
      */
     public function deleteUser() {
+        $this->checkAdminAccess();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
             $user_id = (int)$_POST['user_id'];
             
@@ -186,6 +217,8 @@ class UserController {
      * Crear nuevo usuario usando la lógica de registro
      */
     public function createUser() {
+        $this->checkAdminAccess();
+        
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Preparar datos del formulario usando la misma estructura que el registro
             $data = [

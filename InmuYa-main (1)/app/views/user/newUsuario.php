@@ -8,11 +8,11 @@
 $title = 'Crear Nuevo Usuario - Panel de Administración';
 $description = 'Crear nuevo usuario en el sistema';
 $pageTitle = 'Crear Nuevo Usuario';
+$currentPage = 'usuarios';
 
 ?>
 
-<!-- CSS específico para creación de usuarios -->
-<link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/usuarios.css">
+<!-- CSS específico para creación de usuarios ya cargado en admin.php -->
 
 
 <!-- Contenido específico de creación de usuarios -->

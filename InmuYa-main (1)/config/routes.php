@@ -76,8 +76,8 @@ $routes = [
     'auth/logout' => [
         'controller' => 'AuthController',
         'action' => 'logout',
-        'view' => 'home/index.php',
-        'layout' => 'index'
+        'view' => null,
+        'layout' => null
     ],
     
     // Panel de Administración
@@ -94,6 +94,13 @@ $routes = [
         'controller' => 'UserController',
         'action' => 'showUsers',
         'view' => 'user/usuarios.php',
+        'layout' => 'admin'
+    ],
+    
+    'user/new' => [
+        'controller' => 'UserController',
+        'action' => 'showCreateUser',
+        'view' => 'user/newUsuario.php',
         'layout' => 'admin'
     ],
     

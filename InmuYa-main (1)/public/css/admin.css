@@ -245,3 +245,100 @@ body.admin-body {
         font-size: 1rem;
     }
 }
+
+/* ===== ESTILOS DE PAGE-HEADER ===== */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid #e9ecef;
+}
+
+.header-left h2 {
+    color: #072638;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.header-left p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.header-stats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #072638;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.stat-item i {
+    color: #4883A5;
+    font-size: 0.85rem;
+}
+
+/* ===== ESTILOS DE BOTONES ===== */
+.btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--border-radius-boton);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transicion);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-secundario), var(--color-terciario));
+    color: var(--color-blanco);
+    box-shadow: var(--sombra-suave);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}
+
+.btn-secondary {
+    background: var(--color-gris-claro);
+    color: var(--color-secundario);
+    border: 2px solid var(--color-secundario);
+}
+
+.btn-secondary:hover {
+    background: var(--color-secundario);
+    color: var(--color-blanco);
+}
+
+.btn-danger {
+    background: var(--color-rojo);
+    color: var(--color-blanco);
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}

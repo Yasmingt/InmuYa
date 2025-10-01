@@ -5,9 +5,10 @@
  */
 
 // Definir variables para el layout
-$title = 'Gestión de Contactos - Panel de Administración';
+$title = 'Gestión de Contactos';
 $description = 'Administrar contactos del sistema';
 $pageTitle = 'Gestión de Contactos';
+$currentPage = 'contactos';
 
 // Incluir el layout de administrador
 include __DIR__ . '/../layouts/admin.php';
@@ -20,25 +21,6 @@ include __DIR__ . '/../layouts/admin.php';
         <div class="header-left">
             <h2>Gestión de Contactos</h2>
             <p>Administra todos los contactos del sistema</p>
-        </div>
-    </div>
-
-    <!-- Filtros y búsqueda -->
-    <div class="filters-section">
-        <div class="filters-row">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar contactos..." id="contactSearch">
-            </div>
-            <div class="filter-group">
-                <select id="statusFilter">
-                    <option value="">Todos los estados</option>
-                    <option value="nuevo">Nuevo</option>
-                    <option value="leido">Leído</option>
-                    <option value="respondido">Respondido</option>
-                    <option value="cerrado">Cerrado</option>
-                </select>
-            </div>
         </div>
     </div>
 
@@ -116,64 +98,3 @@ include __DIR__ . '/../layouts/admin.php';
     </div>
 </div>
 
-<!-- Scripts específicos -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Búsqueda de contactos
-    const searchInput = document.getElementById('contactSearch');
-    const contactsList = document.querySelector('.contacts-list');
-    
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const contactItems = contactsList.querySelectorAll('.contact-item');
-        
-        contactItems.forEach(item => {
-            const contactName = item.querySelector('h4').textContent.toLowerCase();
-            const contactEmail = item.querySelector('.contact-email').textContent.toLowerCase();
-            const contactMessage = item.querySelector('.contact-message').textContent.toLowerCase();
-            
-            if (contactName.includes(searchTerm) || 
-                contactEmail.includes(searchTerm) || 
-                contactMessage.includes(searchTerm)) {
-                item.style.display = '';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    });
-    
-    // Filtros
-    const statusFilter = document.getElementById('statusFilter');
-    const dateFilter = document.getElementById('dateFilter');
-    
-    function applyFilters() {
-        const statusValue = statusFilter.value;
-        const dateValue = dateFilter.value;
-        const contactItems = contactsList.querySelectorAll('.contact-item');
-        
-        contactItems.forEach(item => {
-            let showItem = true;
-            
-            if (statusValue) {
-                const itemStatus = item.querySelector('.status-badge').textContent.toLowerCase();
-                if (itemStatus !== statusValue) {
-                    showItem = false;
-                }
-            }
-            
-            // Aquí iría la lógica de filtrado por fecha
-            
-            item.style.display = showItem ? '' : 'none';
-        });
-    }
-    
-    statusFilter.addEventListener('change', applyFilters);
-    dateFilter.addEventListener('change', applyFilters);
-    
-    // Select all checkbox
-    const selectAllCheckbox = document.querySelector('.contact-check');
-    const contactCheckboxes = document.querySelectorAll('.contact-check');
-    
-    // Aquí iría la lógica para el checkbox de seleccionar todos
-});
-</script>

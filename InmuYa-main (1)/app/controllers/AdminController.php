@@ -42,7 +42,7 @@ class AdminController {
         // Obtener estadísticas de usuarios
         $stats = $this->userModel->getUserStats();
         
-        // Obtener usuarios recientes (últimos 5)
+        // Obtener usuarios recientes (últimos 4)
         $recent_users = $this->userModel->getAllUsers(4);
          
         // Incluir la vista del dashboard
@@ -72,7 +72,7 @@ class AdminController {
         $propiedades = []; // Por ahora vacío
         
         // Incluir la vista de propiedades
-        include __DIR__ . '/../views/admin/propiedades.php';
+        include __DIR__ . '/../views/property/propiedades.php';
     }
     
     /**
@@ -85,7 +85,7 @@ class AdminController {
         $contactos = []; // Por ahora vacío
         
         // Incluir la vista de contactos
-        include __DIR__ . '/../views/admin/contactos.php';
+        include __DIR__ . '/../views/contactos/contactos.php';
     }
 }
 ?>

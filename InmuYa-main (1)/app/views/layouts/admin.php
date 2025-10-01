@@ -1,3 +1,14 @@
+<?php
+/**
+ * Layout Principal del Panel de Administración
+ * InmuYa - Sistema de gestión inmobiliaria
+ */
+
+// Iniciar sesión si no está iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,14 +22,8 @@
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css">
     
     <!-- CSS específico por página -->
-    <?php if (isset($pageTitle) && strpos($pageTitle, 'Dashboard') !== false): ?>
-        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/dashboard.css">
-    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Usuarios') !== false): ?>
-        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/usuarios.css">
-    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Propiedades') !== false): ?>
-        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/propiedades.css">
-    <?php elseif (isset($pageTitle) && strpos($pageTitle, 'Contactos') !== false): ?>
-        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/contactos.css">
+    <?php if (isset($currentPage)): ?>
+        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/<?php echo $currentPage; ?>.css">
     <?php endif; ?>
     
     <!-- Font Awesome para iconos -->
@@ -42,25 +47,35 @@
                 </nav>
             </div>
             <div class="header-right">
-                    <div class="user-info">
-                        <div class="user-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="user-details">
-                            <span class="user-name"><?php echo $_SESSION['user_name'] ?? 'Usuario'; ?></span>
-                        </div>
-                        <div class="user-menu">
-                            <button class="user-menu-toggle">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                            <ul class="user-dropdown">
-                                <li>
-                                    <a href="<?php echo BASE_URL; ?>auth/logout">
-                                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                         <i class="fas fa-user-circle"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">
+                            <?php 
+                            // Intentar diferentes nombres de variables de sesión
+                            $userName = $_SESSION['user_name'] ?? 
+                                       $_SESSION['nombre'] ?? 
+                                       $_SESSION['nombre_usuario'] ?? 
+                                       $_SESSION['usuario'] ?? 
+                                       $_SESSION['name'] ?? 
+                                       'Usuario';
+                            echo htmlspecialchars($userName);
+                            ?>
+                        </span>
+                    </div>
+                    <div class="user-menu">
+                        <button class="user-menu-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <ul class="user-dropdown">
+                            <li>
+                                <a href="<?php echo BASE_URL; ?>index.php?route=auth/logout">
+                                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
