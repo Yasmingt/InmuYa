@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-09-2025 a las 20:37:53
+-- Tiempo de generación: 03-10-2025 a las 06:00:39
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -56,7 +56,7 @@ CREATE TABLE `contactar` (
   `email` varchar(50) NOT NULL,
   `asunto` varchar(100) NOT NULL,
   `mensaje` text NOT NULL,
-  `estado` varchar(20) NOT NULL
+  `estado` enum('nuevo','leido','respondido','cerrado') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -64,12 +64,10 @@ CREATE TABLE `contactar` (
 --
 
 INSERT INTO `contactar` (`id`, `nombre`, `email`, `asunto`, `mensaje`, `estado`) VALUES
-(1, 'ss', '', 's', 'a', ''),
-(2, 'yas', 'camilopez@gmail', 'jh', 'jj', ''),
-(3, 'jmji', 'camiloez@gmail', 'dreyt6', 'y6uh', ''),
-(4, 'mayerly acevedo', 'acevedomaye@gmail.com', 'wrfedgvre', 'jhnaj jhnsiw c', ''),
-(5, 'daniel ramirez', 'daniel@gmail.com', 'fedcws', 'edfr4cdf', ''),
-(6, 'hgthrbrft', 'vaccajuan@gmail.com', 'efdwsef', 'dwsfce34wf', '');
+(3, 'jmji', 'camiloez@gmail', 'dreyt6', 'y6uh', 'leido'),
+(4, 'mayerly acevedo', 'acevedomaye@gmail.com', 'wrfedgvre', 'jhnaj jhnsiw c', 'leido'),
+(5, 'daniel ramirez', 'daniel@gmail.com', 'fedcws', 'edfr4cdf', 'cerrado'),
+(6, 'hgthrbrft', 'vaccajuan@gmail.com', 'efdwsef', 'dwsfce34wf', 'nuevo');
 
 -- --------------------------------------------------------
 
@@ -166,7 +164,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `email`, `telefono`, `tipodocumento`, `numerodocumento`, `fechadenacimiento`, `contrasena`, `tipo_usuario`) VALUES
-(1001398338, 'Alejandra', 'alejandra.chancit@gmail.com', '3137155912', 9, '1001398338', '2001-03-18', '$2y$10$OgtFC35koek7JQ7t2H7.t.DpVbP4q9RWfJ0nPMC/PMRw/VQn29TeC', 'admin');
+(2, 'Alejandra Torres', 'alejandra.chancit@gmail.com', '3137155912', 9, '1001398338', '2001-03-18', '$2y$10$V6PKwZS4Skc/nO2f5Nrp9O94iiLNFg6PZtgtTfcY96uv1m729/n4S', 'admin'),
+(3, 'Felipe Valencia', 'felipevalenciaarcila@gmail.com', '3156607670', 9, '1128271817', '1987-10-04', '$2y$10$0WkOKgkmR7bucsK7VKZg6e4WBSYzbAH5DqQDh8AK/ioGnqZtYojdW', 'propietario'),
+(4, 'yasmin', 'yasmin@gmail.com', '3195515809', 9, '1028141355', '2001-01-07', '$2y$10$UkHkrZNsiU0UFQajdQxp7.pF8aSBSr/VjUtQFqlI7lN1AeahjImU2', 'cliente');
 
 --
 -- Índices para tablas volcadas
