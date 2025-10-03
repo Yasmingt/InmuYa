@@ -16,8 +16,8 @@ InmuYa es un sistema web desarrollado en PHP para la gestión inmobiliaria, que 
 ## 🛠️ Tecnologías Utilizadas
 
 - **Backend:** PHP 7.4+
-- **Base de Datos:** MySQL 5.7+ / MariaDB 10.2+
-- **Frontend:** HTML5, CSS3, JavaScript
+- **Base de Datos:** MySQL 5.7+
+- **Frontend:** HTML5, CSS3
 - **Iconos:** Font Awesome
 
 ## 📁 Estructura del Proyecto
@@ -66,22 +66,73 @@ InmuYa/
 - Servidor web (Apache/Nginx)
 - Extensiones PHP: PDO, PDO_MySQL
 
-### Pasos de Instalación
+### Instalación desde ZIP (Recomendado)
+
+Si descargaste el proyecto como archivo ZIP desde GitHub:
+
+1. **Extraer el archivo ZIP:**
+   - Extrae el contenido en tu directorio web (ej: `htdocs`, `www`, etc.)
+   - **Importante:** Renombra la carpeta para evitar espacios (ej: `InmuYa-main` → `InmuYa`)
+
+2. **Configurar la base de datos:**
+   ```sql
+   -- Crear la base de datos
+   CREATE DATABASE propertypro_bd CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   
+   -- Importar la estructura
+   -- Usa el archivo propertypro_bd.sql incluido en el proyecto
+   ```
+
+3. **Configurar credenciales de base de datos:**
+   - Edita `config/conexion.php` con tus credenciales de MySQL
+   - Por defecto usa: host=localhost, user=root, password='', database=propertypro_bd
+
+4. **Configuración automática de rutas:**
+   - El sistema detecta automáticamente la URL base
+   - No necesitas modificar archivos de configuración manualmente
+   - Las rutas se ajustan según el entorno (desarrollo/producción)
+
+### Instalación desde Git
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone https://github.com/tu-usuario/InmuYa-Sistema-Inmobiliario.git
-   cd InmuYa-Sistema-Inmobiliario
+   git clone https://github.com/Yasmingt/InmuYa.git
+   cd InmuYa
    ```
 
-2. **Configurar la base de datos:**
-   - Crear base de datos MySQL
-   - Importar estructura inicial desde `propertypro_bd.sql`
-   - Configurar credenciales en `config/conexion.php`
+2. **Seguir los pasos 2-4 de la instalación desde ZIP**
 
-3. **Configurar servidor web:**
-   - Apuntar document root al directorio del proyecto
-   - Configurar URL base en `config/config.php`
+### Verificación de Instalación
+
+1. **Acceder al sistema:**
+   - Abre tu navegador
+   - Ve a `http://localhost/tu-carpeta-del-proyecto/`
+   - Deberías ver la página principal de InmuYa
+
+2. **Probar funcionalidades:**
+   - Registro de usuario
+   - Inicio de sesión
+   - Panel de administración
+
+### Solución de Problemas Comunes
+
+**❌ Los estilos CSS no se cargan:**
+- Verifica que la carpeta `public/css/` existe
+- Asegúrate de que el servidor web puede leer archivos CSS
+- Revisa la consola del navegador para errores 404
+
+**❌ Las imágenes no se muestran:**
+- Verifica que la carpeta `public/img/` existe
+- Comprueba permisos de lectura en la carpeta de imágenes
+
+**❌ Error de conexión a base de datos:**
+- Verifica credenciales en `config/conexion.php`
+- Asegúrate de que MySQL está ejecutándose
+- Confirma que la base de datos `propertypro_bd` existe
+
+**❌ Rutas no funcionan:**
+- El sistema detecta automáticamente las rutas
+- Si persiste el problema, verifica que `mod_rewrite` está habilitado en Apache
 
 ## 🚀 Uso del Sistema
 

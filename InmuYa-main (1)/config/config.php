@@ -6,14 +6,22 @@
 
 // Definir la URL base del proyecto (solo si no está definida)
 if (!defined('BASE_URL')) {
-    // Detectar si estamos usando el servidor de desarrollo de PHP
-    if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 8000) {
-        define('BASE_URL', 'http://localhost:8000/');
-    } elseif (isset($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'localhost:8000') !== false) {
-        define('BASE_URL', 'http://localhost:8000/');
+    // Detectar automáticamente la URL base del proyecto
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    
+    // Obtener el directorio del script actual
+    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+    
+    // Si estamos en el directorio raíz del proyecto
+    if ($scriptDir === '/' || $scriptDir === '') {
+        $baseUrl = $protocol . '://' . $host . '/';
     } else {
-        define('BASE_URL', 'http://localhost/InmuYa/InmuYa-main%20(1)/');
+        // Construir la URL base con el directorio del script
+        $baseUrl = $protocol . '://' . $host . $scriptDir . '/';
     }
+    
+    define('BASE_URL', $baseUrl);
 }
 
 // Configuración de la base de datos
