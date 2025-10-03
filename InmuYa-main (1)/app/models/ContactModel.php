@@ -49,7 +49,7 @@ class ContactModel {
      * Obtener todos los mensajes de contacto
      */
     public function getAllContacts($limit = null, $offset = 0) {
-        $sql = "SELECT * FROM contactar ORDER BY id_contacto DESC";
+        $sql = "SELECT * FROM contactar ORDER BY id ASC";
         if ($limit !== null) {
             $sql .= " LIMIT ? OFFSET ?";
             $stmt = $this->conexion->prepare($sql);
@@ -69,7 +69,7 @@ class ContactModel {
      * Obtener mensaje por ID
      */
     public function getContactById($id) {
-        $stmt = $this->conexion->prepare("SELECT * FROM contactar WHERE id_contacto = ?");
+        $stmt = $this->conexion->prepare("SELECT * FROM contactar WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -79,10 +79,42 @@ class ContactModel {
     }
     
     /**
+     * Cambiar estado de un contacto
+     */
+    public function changeContactStatus($id, $estado) {
+        $estadosValidos = ['nuevo', 'leido', 'respondido', 'cerrado'];
+        
+        if (!in_array($estado, $estadosValidos)) {
+            return [
+                'success' => false,
+                'message' => 'Estado no válido'
+            ];
+        }
+        
+        $stmt = $this->conexion->prepare("UPDATE contactar SET estado = ? WHERE id = ?");
+        $stmt->bind_param("si", $estado, $id);
+        $stmt->execute();
+        $affected = $stmt->affected_rows;
+        $stmt->close();
+        
+        if ($affected > 0) {
+            return [
+                'success' => true,
+                'message' => 'Estado actualizado correctamente'
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'No se pudo actualizar el estado'
+            ];
+        }
+    }
+    
+    /**
      * Eliminar mensaje de contacto
      */
     public function deleteContact($id) {
-        $stmt = $this->conexion->prepare("DELETE FROM contactar WHERE id_contacto = ?");
+        $stmt = $this->conexion->prepare("DELETE FROM contactar WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $affected = $stmt->affected_rows;

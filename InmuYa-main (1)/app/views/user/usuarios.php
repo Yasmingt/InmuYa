@@ -75,7 +75,7 @@ include __DIR__ . '/../layouts/admin.php';
                                     <span class="user-email"><?php echo htmlspecialchars($user['email']); ?></span>
                                 </td>
                                 <td>
-                                    <span class="badge badge-<?php echo strtolower($user['tipo_usuario']); ?>">
+                                    <span class="badge <?php echo strtolower($user['tipo_usuario']); ?>">
                                         <?php echo ucfirst($user['tipo_usuario']); ?>
                                     </span>
                                 </td>

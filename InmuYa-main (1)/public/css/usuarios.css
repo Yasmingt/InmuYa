@@ -1,17 +1,57 @@
 /* ===== ESTILOS PARA GESTIÓN DE USUARIOS ===== */
 /* Mantiene consistencia con los estilos de autenticación */
 
-/* Variables CSS ya definidas en admin.css - usando las del sistema base */
+/* Variables CSS del sistema */
+:root {
+    --color-principal: rgba(12, 97, 136, 0.589);
+    --color-secundario: #072638;
+    --color-terciario: #4883A5;
+    --color-gris: #555;
+    --color-blanco: white;
+    --color-negro: black;
+    --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --color-gris-claro: #ecf0f1;
+    --color-verde: #27ae60;
+    --color-rojo: #e74c3c;
+    --sombra-suave: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --sombra-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --transicion: all 0.3s ease;
+    --border-radius: 12px;
+    --border-radius-boton: 25px;
+}
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    line-height: 1.6;
+    color: var(--color-gris);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: var(--color-gris-claro);
+}
 
 /* ===== CONTENIDO PRINCIPAL ===== */
 .usuarios-content {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
-    background: #f8f9fa;
+    background: var(--color-gris-claro);
     min-height: calc(100vh - 80px);
     overflow-x: hidden;
     box-sizing: border-box;
+    font-family: var(--fuente-principal);
 }
 
 .usuarios-content * {
@@ -205,13 +245,98 @@
     }
 }
 
+/* ===== HEADER DE SECCIÓN ===== */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--color-blanco);
+    border: 1px solid var(--color-gris-claro);
+    border-radius: var(--border-radius);
+    color: var(--color-gris);
+    box-shadow: var(--sombra-suave);
+}
+
+.section-title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-secundario);
+}
+
+.section-subtitle {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    font-size: 1rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.card-actions .btn-secondary {
+    background: var(--color-secundario);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: var(--border-radius-boton);
+    padding: 0.75rem 1.5rem;
+    font-family: var(--fuente-principal);
+    font-weight: 600;
+    transition: var(--transicion);
+}
+
+.card-actions .btn-secondary:hover {
+    background: var(--color-principal);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}
+
+/* ===== MENSAJES ===== */
+.mensaje-error {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+}
+
+.mensaje-exito {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    border: 1px solid #6ee7b7;
+    color: #059669;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+}
+
+.mensaje-error ul {
+    margin: 0;
+    padding-left: 1rem;
+}
+
+.mensaje-error li {
+    margin: 0.25rem 0;
+}
+
 /* ===== FORMULARIO DE CREACIÓN ===== */
 .form-section {
-    background: white;
-    border-radius: 16px;
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--color-gris-claro);
     margin-bottom: 2rem;
 }
 
@@ -232,15 +357,18 @@
     color: var(--color-secundario);
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
+    font-family: var(--fuente-principal);
 }
 
 .form-input {
     padding: 0.75rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
+    border: 2px solid var(--color-gris-claro);
+    border-radius: var(--border-radius);
     font-size: 1rem;
-    transition: all 0.3s ease;
-    background: white;
+    font-family: var(--fuente-principal);
+    transition: var(--transicion);
+    background: var(--color-blanco);
+    color: var(--color-gris);
 }
 
 .form-input:focus {
@@ -250,17 +378,20 @@
 }
 
 .form-input::placeholder {
-    color: #999;
+    color: var(--color-gris);
+    opacity: 0.7;
 }
 
 .form-select {
     padding: 0.75rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
+    border: 2px solid var(--color-gris-claro);
+    border-radius: var(--border-radius);
     font-size: 1rem;
-    background: white;
+    font-family: var(--fuente-principal);
+    background: var(--color-blanco);
+    color: var(--color-gris);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transicion);
     appearance: none;
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 8px center;
@@ -273,6 +404,113 @@
     outline: none;
     border-color: var(--color-principal);
     box-shadow: 0 0 0 3px rgba(12, 97, 136, 0.1);
+}
+
+/* ===== INPUT DE CONTRASEÑA ===== */
+.password-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input .form-input {
+    padding-right: 3rem;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.password-toggle:hover {
+    color: var(--color-principal);
+    background: rgba(12, 97, 136, 0.1);
+}
+
+.password-toggle:focus {
+    outline: none;
+    color: var(--color-principal);
+    background: rgba(12, 97, 136, 0.15);
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: var(--color-secundario);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: var(--border-radius-boton);
+    padding: 1rem 2rem;
+    font-family: var(--fuente-principal);
+    font-weight: 600;
+    transition: var(--transicion);
+    box-shadow: var(--sombra-suave);
+}
+
+.btn-primary:hover {
+    background: var(--color-principal);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--color-gris);
+    color: var(--color-blanco);
+    border: none;
+    border-radius: var(--border-radius-boton);
+    padding: 1rem 2rem;
+    font-family: var(--fuente-principal);
+    font-weight: 600;
+    transition: var(--transicion);
+    box-shadow: var(--sombra-suave);
+}
+
+.btn-secondary:hover {
+    background: var(--color-secundario);
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-hover);
+}
+
+.btn i {
+    font-size: 0.9rem;
 }
 
 /* ===== INFORMACIÓN DE PAGINACIÓN ===== */
@@ -293,6 +531,16 @@
         padding: 1rem;
     }
     
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
     .form-section {
         padding: 1rem;
     }
@@ -300,6 +548,16 @@
     .form-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        min-width: auto;
     }
     
     .data-table th,

@@ -112,6 +112,34 @@ $routes = [
         'layout' => 'admin'
     ],
     
+    'user/create' => [
+        'controller' => 'UserController',
+        'action' => 'createUser',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'user/edit' => [
+        'controller' => 'UserController',
+        'action' => 'showEditUser',
+        'view' => 'user/updateUsuario.php',
+        'layout' => 'admin'
+    ],
+    
+    'user/update' => [
+        'controller' => 'UserController',
+        'action' => 'updateUser',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'user/delete' => [
+        'controller' => 'UserController',
+        'action' => 'deleteUser',
+        'view' => null,
+        'layout' => null
+    ],
+    
     'admin/propiedades' => [
         'controller' => 'AdminController',
         'action' => 'propiedades',
@@ -124,6 +152,20 @@ $routes = [
         'action' => 'contactos',
         'view' => 'admin/contactos.php',
         'layout' => 'admin'
+    ],
+    
+    'contact/change-status' => [
+        'controller' => 'ContactActionController',
+        'action' => 'changeStatus',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'contact/delete' => [
+        'controller' => 'ContactActionController',
+        'action' => 'deleteContact',
+        'view' => null,
+        'layout' => null
     ],
         
     'contact/process' => [

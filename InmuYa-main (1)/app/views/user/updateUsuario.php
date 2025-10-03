@@ -4,223 +4,204 @@
  * InmuYa - Sistema de gestión inmobiliaria
  */
 
-session_start();
+// Definir variables para el layout
+$title = 'Editar Usuario - Panel de Administración';
+$description = 'Editar información del usuario';
+$pageTitle = 'Editar Usuario';
+$currentPage = 'usuarios';
 
-// Verificar si el usuario está logueado y es administrativo
-if (!isset($_SESSION['id_usuario']) || $_SESSION['tipo_usuario'] !== 'administrativo') {
-    header("Location: login.php");
-    exit();
-}
-
-require_once 'conexion.php';
-
-$mensaje = "";
-$mensaje_error = "";
-$usuario = null;
-
-// Obtener ID del usuario a editar
-$id_usuario = $_GET['id'] ?? '';
-
-if (empty($id_usuario)) {
-    header("Location: inicio.php");
-    exit();
-}
-
-// Obtener datos del usuario
-try {
-    $sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
-    $stmt = $conexion->prepare($sql);
-    $stmt->execute([$id_usuario]);
-    $usuario = $stmt->fetch();
-    
-    if (!$usuario) {
-        header("Location: inicio.php");
-        exit();
-    }
-} catch (PDOException $e) {
-    error_log("Error al obtener usuario: " . $e->getMessage());
-    header("Location: inicio.php");
-    exit();
-}
-
-// Procesar actualización
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $nombre = sanitizar_entrada($_POST['nombre'] ?? '');
-        $email = sanitizar_entrada($_POST['email'] ?? '');
-        $telefono = sanitizar_entrada($_POST['telefono'] ?? '');
-        $tipodedocumento = $_POST['tipodedocumento'] ?? '';
-        $fechadenacimiento = $_POST['fechadenacimiento'] ?? '';
-        $contrasena = $_POST['contrasena'] ?? '';
-        $tipo_usuario = $_POST['tipo_usuario'] ?? '';
-
-        // Validaciones
-        if (empty($nombre) || empty($email) || empty($telefono) || empty($tipodedocumento) || 
-            empty($fechadenacimiento) || empty($tipo_usuario)) {
-            throw new Exception("Todos los campos son obligatorios.");
-        }
-
-        if (!validar_email($email)) {
-            throw new Exception("El formato del email no es válido.");
-        }
-
-        if (!validar_telefono($telefono)) {
-            throw new Exception("El formato del teléfono no es válido.");
-        }
-
-        if (strlen($nombre) < 2 || strlen($nombre) > 100) {
-            throw new Exception("El nombre debe tener entre 2 y 100 caracteres.");
-        }
-
-        // Verificar si el email ya existe en otro usuario
-        $sql_check = "SELECT id_usuario FROM usuarios WHERE email = ? AND id_usuario != ?";
-        $stmt_check = $conexion->prepare($sql_check);
-        $stmt_check->execute([$email, $id_usuario]);
-        
-        if ($stmt_check->fetch()) {
-            throw new Exception("Ya existe un usuario con ese email.");
-        }
-
-        // Preparar consulta de actualización
-        if (!empty($contrasena)) {
-            if (strlen($contrasena) < 8) {
-                throw new Exception("La contraseña debe tener al menos 8 caracteres.");
-            }
-            $contrasena_hash = password_hash($contrasena, PASSWORD_DEFAULT);
-            $sql = "UPDATE usuarios SET nombre=?, email=?, telefono=?, tipodedocumento=?, 
-                    fechadenacimiento=?, contrasena=?, tipo_usuario=?, fecha_actualizacion=NOW() 
-                    WHERE id_usuario=?";
-            $params = [$nombre, $email, $telefono, $tipodedocumento, $fechadenacimiento, $contrasena_hash, $tipo_usuario, $id_usuario];
-        } else {
-            $sql = "UPDATE usuarios SET nombre=?, email=?, telefono=?, tipodedocumento=?, 
-                    fechadenacimiento=?, tipo_usuario=?, fecha_actualizacion=NOW() 
-                    WHERE id_usuario=?";
-            $params = [$nombre, $email, $telefono, $tipodedocumento, $fechadenacimiento, $tipo_usuario, $id_usuario];
-        }
-
-        $stmt = $conexion->prepare($sql);
-        if (!$stmt) {
-            throw new Exception("Error en la preparación de la consulta.");
-        }
-
-        $resultado = $stmt->execute($params);
-
-        if ($resultado) {
-            $mensaje = "Usuario actualizado correctamente.";
-            // Recargar datos del usuario actualizado
-            $sql = "SELECT * FROM usuarios WHERE id_usuario = ?";
-            $stmt = $conexion->prepare($sql);
-            $stmt->execute([$id_usuario]);
-            $usuario = $stmt->fetch();
-        } else {
-            throw new Exception("Error al actualizar el usuario.");
-        }
-
-    } catch (Exception $e) {
-        $mensaje_error = $e->getMessage();
-        error_log("Error en update.php: " . $e->getMessage());
-    } catch (PDOException $e) {
-        $mensaje_error = "Error de base de datos. Por favor, inténtelo más tarde.";
-        error_log("Error PDO en update.php: " . $e->getMessage());
-    }
-}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/update.css">
-    <title>Editar Usuario - InmuYa</title>
+    <title><?php echo $title ?? 'Editar Usuario - InmuYa'; ?></title>
+    <meta name="description" content="<?php echo $description ?? 'Editar información del usuario'; ?>">
+    <link rel="icon" type="image/jpeg" href="<?php echo BASE_URL; ?>public/img/logo.jpeg">
+    
+    <!-- CSS específico para usuarios -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/usuarios.css">
+    
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>Editar Usuario</h1>
-            <a href="inicio.php" class="btn">Volver al Panel</a>
+
+<!-- Contenido específico de edición de usuarios -->
+<div class="usuarios-content">
+    <!-- Header de la página -->
+    <div class="section-header">
+        <div>
+            <h2 class="section-title">Editar Usuario</h2>
+            <p class="section-subtitle">Modificar información del usuario</p>
         </div>
-
-        <?php if (!empty($mensaje)): ?>
-            <div style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
-                <?php echo htmlspecialchars($mensaje); ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if (!empty($mensaje_error)): ?>
-            <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center;">
-                <?php echo htmlspecialchars($mensaje_error); ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($usuario): ?>
-        <section class="update">
-            <form action="update.php?id=<?php echo $usuario['id_usuario']; ?>" method="POST">
-                <div class="form-group">
-                    <label for="nombre">Nombre completo *</label>
-                    <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($usuario['nombre']); ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="email">Correo electrónico *</label>
-                    <input type="email" name="email" value="<?php echo htmlspecialchars($usuario['email']); ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="telefono">Teléfono *</label>
-                    <input type="text" name="telefono" value="<?php echo htmlspecialchars($usuario['telefono']); ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="tipodedocumento">Tipo de documento *</label>
-                    <select name="tipodedocumento" required>
-                        <option value="">Selecciona tu tipo de documento</option>
-                        <option value="cedula" <?php echo $usuario['tipodedocumento'] === 'cedula' ? 'selected' : ''; ?>>Cédula de ciudadanía</option>
-                        <option value="extranjeria" <?php echo $usuario['tipodedocumento'] === 'extranjeria' ? 'selected' : ''; ?>>Cédula de extranjería</option>
-                        <option value="pasaporte" <?php echo $usuario['tipodedocumento'] === 'pasaporte' ? 'selected' : ''; ?>>Pasaporte</option>
-                        <option value="ppt" <?php echo $usuario['tipodedocumento'] === 'ppt' ? 'selected' : ''; ?>>PPT</option>
-                        <option value="pep" <?php echo $usuario['tipodedocumento'] === 'pep' ? 'selected' : ''; ?>>PEP</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="fechadenacimiento">Fecha de Nacimiento *</label>
-                    <input type="date" name="fechadenacimiento" value="<?php echo $usuario['fechadenacimiento']; ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="identificacion">N° de identificación</label>
-                    <input type="text" name="identificacion" value="<?php echo htmlspecialchars($usuario['id_usuario']); ?>" readonly>
-                    <small>La identificación no se puede modificar</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="contrasena">Nueva contraseña</label>
-                    <input type="password" name="contrasena" placeholder="Dejar vacío para mantener la actual">
-                    <small>Dejar vacío si no deseas cambiar la contraseña</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="tipodeusuario">Tipo de usuario *</label>
-                    <select name="tipodeusuario" required>
-                        <option value="">Selecciona tu tipo de usuario</option>
-                        <option value="propietario" <?php echo $usuario['tipo_usuario'] === 'propietario' ? 'selected' : ''; ?>>Propietario</option>
-                        <option value="cliente" <?php echo $usuario['tipo_usuario'] === 'cliente' ? 'selected' : ''; ?>>Cliente</option>
-                        <option value="administrativo" <?php echo $usuario['tipo_usuario'] === 'administrativo' ? 'selected' : ''; ?>>Administrativo</option>
-                    </select>
-                </div>
-
-                <div class="boton-container">
-                    <button type="submit" class="btn btn-success">Actualizar Usuario</button>
-                    <a href="inicio.php" class="btn">Cancelar</a>
-                </div>
-            </form>
-        </section>
-        <?php else: ?>
-            <div style="text-align: center; padding: 20px;">
-                <p>Usuario no encontrado.</p>
-                <a href="inicio.php" class="btn">Volver al Panel</a>
-            </div>
-        <?php endif; ?>
+        <div class="card-actions">
+            <a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Volver a Usuarios
+            </a>
+        </div>
     </div>
+
+    <!-- Mensajes de error/success -->
+    <?php if (!empty($errors)): ?>
+        <div class="mensaje-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li><?php echo htmlspecialchars($error); ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
+        <div class="mensaje-exito">
+            <i class="fas fa-check-circle"></i>
+            Usuario actualizado exitosamente
+        </div>
+    <?php endif; ?>
+
+    <?php if ($usuario): ?>
+    <!-- Formulario de edición -->
+    <div class="form-section">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?route=user/update&id=<?php echo $usuario['id_usuario']; ?>" id="updateUserForm" class="user-form">
+            <div class="form-grid">
+                <!-- Información Personal -->
+                <div class="form-group">
+                    <label for="nombre">
+                        <i class="fas fa-user"></i>
+                        Nombre Completo *
+                    </label>
+                    <input type="text" id="nombre" name="nombre" class="form-input" 
+                           value="<?php echo htmlspecialchars($usuario['nombre']); ?>" 
+                           placeholder="Ingrese el nombre completo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i>
+                        Correo Electrónico *
+                    </label>
+                    <input type="email" id="email" name="email" class="form-input" 
+                           value="<?php echo htmlspecialchars($usuario['email']); ?>" 
+                           placeholder="usuario@ejemplo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">
+                        <i class="fas fa-phone"></i>
+                        Teléfono *
+                    </label>
+                    <input type="tel" id="telefono" name="telefono" class="form-input" 
+                           value="<?php echo htmlspecialchars($usuario['telefono']); ?>" 
+                           placeholder="3001234567" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechadenacimiento">
+                        <i class="fas fa-calendar"></i>
+                        Fecha de Nacimiento *
+                    </label>
+                    <input type="date" id="fechadenacimiento" name="fechadenacimiento" class="form-input" 
+                           value="<?php echo $usuario['fechadenacimiento']; ?>" required>
+                </div>
+
+                <!-- Información de Documento -->
+                <div class="form-group">
+                    <label for="tipodocumento">
+                        <i class="fas fa-id-card"></i>
+                        Tipo de Documento *
+                    </label>
+                    <select id="tipodocumento" name="tipodocumento" class="form-select" required>
+                        <option value="">Seleccione el tipo</option>
+                        <option value="9" <?php echo $usuario['tipodocumento'] == '9' ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
+                        <option value="14" <?php echo $usuario['tipodocumento'] == '14' ? 'selected' : ''; ?>>Cédula de Extranjería</option>
+                        <option value="15" <?php echo $usuario['tipodocumento'] == '15' ? 'selected' : ''; ?>>Pasaporte</option>
+                        <option value="16" <?php echo $usuario['tipodocumento'] == '16' ? 'selected' : ''; ?>>PPT</option>
+                        <option value="17" <?php echo $usuario['tipodocumento'] == '17' ? 'selected' : ''; ?>>PEP</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="numerodocumento">
+                        <i class="fas fa-hashtag"></i>
+                        Número de Documento *
+                    </label>
+                    <input type="text" id="numerodocumento" name="numerodocumento" class="form-input" 
+                           value="<?php echo htmlspecialchars($usuario['numerodocumento']); ?>" 
+                           placeholder="12345678" required>
+                </div>
+
+                <!-- Información de Acceso -->
+                <div class="form-group">
+                    <label for="contrasena">
+                        <i class="fas fa-lock"></i>
+                        Nueva Contraseña
+                    </label>
+                    <div class="password-input">
+                        <input type="password" id="contrasena" name="contrasena" class="form-input" 
+                               placeholder="Dejar vacío para mantener la actual">
+                        <button type="button" class="password-toggle" onclick="togglePassword('contrasena')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <small style="color: #666; font-size: 0.8rem; margin-top: 0.25rem; display: block;">
+                        Dejar vacío si no deseas cambiar la contraseña
+                    </small>
+                </div>
+
+                <!-- Tipo de Usuario -->
+                <div class="form-group">
+                    <label for="tipo_usuario">
+                        <i class="fas fa-user-tag"></i>
+                        Tipo de Usuario *
+                    </label>
+                    <select id="tipo_usuario" name="tipo_usuario" class="form-select" required>
+                        <option value="">Seleccione el tipo</option>
+                        <option value="cliente" <?php echo $usuario['tipo_usuario'] == 'cliente' ? 'selected' : ''; ?>>Cliente</option>
+                        <option value="propietario" <?php echo $usuario['tipo_usuario'] == 'propietario' ? 'selected' : ''; ?>>Propietario</option>
+                        <option value="admin" <?php echo $usuario['tipo_usuario'] == 'admin' ? 'selected' : ''; ?>>Administrador</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Actualizar Usuario
+                </button>
+            </div>
+        </form>
+    </div>
+    <?php else: ?>
+        <div class="mensaje-error">
+            <i class="fas fa-exclamation-circle"></i>
+            Usuario no encontrado
+        </div>
+    <?php endif; ?>
+</div>
+
+<script>
+// Función para mostrar/ocultar contraseña
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const button = field.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
 </body>
 </html>

@@ -106,7 +106,7 @@ class UserController {
         $this->checkAdminAccess();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $user_id = isset($_POST['user_id']) ? (int)$_POST['user_id'] : 0;
+            $user_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
             
             if ($user_id <= 0) {
                 header('Location: ' . BASE_URL . 'index.php?route=user/usuarios');

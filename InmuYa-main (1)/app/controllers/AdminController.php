@@ -81,8 +81,10 @@ class AdminController {
     public function contactos() {
         $pageTitle = 'Gestión de Contactos';
         
-        // Aquí se obtendrían los contactos de un ContactModel
-        $contactos = []; // Por ahora vacío
+        // Obtener contactos de la base de datos
+        require_once __DIR__ . '/../models/ContactModel.php';
+        $contactModel = new ContactModel();
+        $contactos = $contactModel->getAllContacts();
         
         // Incluir la vista de contactos
         include __DIR__ . '/../views/contactos/contactos.php';
