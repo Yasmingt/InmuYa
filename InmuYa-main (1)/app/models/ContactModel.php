@@ -13,7 +13,25 @@ class ContactModel {
         // Incluir la configuración de la base de datos
         require_once __DIR__ . '/../../config/database.php';
         
-        $this->conexion = $conexion;
+        // Verificar que la conexión esté disponible
+        if (isset($conexion)) {
+            $this->conexion = $conexion;
+        } else {
+            // Crear conexión directamente si no está disponible
+            try {
+                $this->conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+                
+                if ($this->conexion->connect_error) {
+                    throw new Exception("Error de conexión: " . $this->conexion->connect_error);
+                }
+                
+                $this->conexion->set_charset("utf8");
+                
+            } catch (Exception $e) {
+                error_log("Error en ContactModel: " . $e->getMessage());
+                $this->conexion = null;
+            }
+        }
     }
     
     /**
@@ -122,6 +140,37 @@ class ContactModel {
         } catch (Exception $e) {
             error_log("Error en changeContactStatus: " . $e->getMessage());
             return false;
+        }
+    }
+    
+    /**
+     * Guardar nuevo contacto
+     */
+    public function saveContact($nombre, $email, $asunto, $mensaje) {
+        try {
+            // Verificar que la conexión esté disponible
+            if (!$this->conexion) {
+                return ['success' => false, 'message' => 'Error de conexión a la base de datos'];
+            }
+            
+            $sql = "INSERT INTO contactar (nombre, email, asunto, mensaje, estado) VALUES (?, ?, ?, ?, 'nuevo')";
+            $stmt = $this->conexion->prepare($sql);
+            
+            if (!$stmt) {
+                return ['success' => false, 'message' => 'Error en la preparación de la consulta'];
+            }
+            
+            $stmt->bind_param("ssss", $nombre, $email, $asunto, $mensaje);
+            
+            if ($stmt->execute()) {
+                return ['success' => true, 'message' => 'Contacto guardado exitosamente'];
+            } else {
+                return ['success' => false, 'message' => 'Error al guardar el contacto'];
+            }
+            
+        } catch (Exception $e) {
+            error_log("Error en saveContact: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Error del sistema al guardar el contacto'];
         }
     }
     
