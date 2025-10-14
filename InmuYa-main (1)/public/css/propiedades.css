@@ -1,0 +1,444 @@
+/* ===== ESTILOS PARA GESTIÓN DE PROPIEDADES ===== */
+/* Mantiene consistencia con los estilos de usuarios */
+
+/* Variables CSS del sistema */
+:root {
+    --color-principal: rgba(12, 97, 136, 0.589);
+    --color-secundario: #072638;
+    --color-terciario: #4883A5;
+    --color-gris: #555;
+    --color-blanco: white;
+    --color-negro: black;
+    --fuente-principal: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --color-gris-claro: #ecf0f1;
+    --color-verde: #27ae60;
+    --color-rojo: #e74c3c;
+    --sombra-suave: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --sombra-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --transicion: all 0.3s ease;
+    --border-radius: 12px;
+    --border-radius-boton: 25px;
+}
+
+/* Reset y estilos base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    line-height: 1.6;
+    color: var(--color-gris);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: var(--color-gris-claro);
+}
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+.propiedades-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--color-gris-claro);
+    min-height: calc(100vh - 80px);
+    overflow-x: hidden;
+    box-sizing: border-box;
+    font-family: var(--fuente-principal);
+}
+
+.propiedades-content * {
+    box-sizing: border-box;
+}
+
+/* Prevenir desbordamiento horizontal */
+.propiedades-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* ===== SECCIÓN DE TABLA ===== */
+.table-section {
+    background: var(--color-blanco);
+    border-radius: var(--border-radius);
+    box-shadow: var(--sombra-suave);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+/* ===== TABLA DE DATOS ===== */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, var(--color-secundario), var(--color-terciario));
+    color: var(--color-blanco);
+}
+
+.data-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table th.text-center {
+    text-align: center;
+}
+
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #f1f3f4;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.data-table td.text-center {
+    text-align: center;
+}
+
+.data-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===== INFORMACIÓN DE PROPIEDAD ===== */
+.property-info {
+    display: flex;
+    align-items: center;
+}
+
+.property-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.property-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.property-id {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+.location-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.property-address {
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.property-city {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+/* ===== BADGES DE ESTADO Y TIPO ===== */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.property-type {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+}
+
+.status-available {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.status-rented {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.status-sold {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.status-maintenance {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+/* ===== INFORMACIÓN DE PRECIO ===== */
+.price-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.property-price {
+    font-weight: 700;
+    color: #059669;
+    font-size: 1rem;
+}
+
+.price-period {
+    font-size: 0.75rem;
+    color: #666;
+}
+
+/* ===== TOGGLE DESTACADO ===== */
+.featured-toggle {
+    display: flex;
+    justify-content: center;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+/* ===== ACCIONES DE TABLA ===== */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+.btn-images {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-images:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+}
+
+.btn-edit {
+    background: #f59e0b;
+    color: white;
+}
+
+.btn-edit:hover {
+    background: #d97706;
+    transform: scale(1.1);
+}
+
+.btn-status {
+    background: #10b981;
+    color: white;
+}
+
+.btn-status:hover {
+    background: #059669;
+    transform: scale(1.1);
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+.btn-icon i {
+    font-size: 0.9rem;
+}
+
+/* ===== CONFIRMACIÓN DE ELIMINACIÓN ===== */
+.delete-confirmation {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    text-align: center;
+    display: none;
+    animation: slideDown 0.3s ease-out;
+}
+
+.delete-confirmation.show {
+    display: block;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== ESTADOS VACÍOS ===== */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #666;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin: 0 0 0.5rem 0;
+    color: #555;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .propiedades-content {
+        padding: 1rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (max-width: 480px) {
+    .propiedades-content {
+        padding: 0.75rem;
+    }
+    
+    .data-table {
+        font-size: 0.75rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 0.25rem;
+    }
+    
+    .btn-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .btn-icon i {
+        font-size: 0.8rem;
+    }
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.table-section {
+    animation: fadeIn 0.5s ease-out;
+}

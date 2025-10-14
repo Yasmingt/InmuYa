@@ -30,9 +30,32 @@ if (!defined('BASE_URL')) {
 $routes = [
     // Página principal
     'home' => [
-        'controller' => 'ContactController',
+        'controller' => 'HomeController',
+        'action' => 'index',
         'view' => 'home/index.php',
         'layout' => 'index'
+    ],
+    
+    // Propiedades Públicas
+    'propiedades' => [
+        'controller' => 'PublicPropertyController',
+        'action' => 'index',
+        'view' => 'public/propiedades.php',
+        'layout' => 'public'
+    ],
+    
+    'propiedad' => [
+        'controller' => 'PublicPropertyController',
+        'action' => 'verPropiedad',
+        'view' => 'public/detallePropiedad.php',
+        'layout' => 'public'
+    ],
+    
+    'buscar-propiedades' => [
+        'controller' => 'PublicPropertyController',
+        'action' => 'buscar',
+        'view' => 'public/buscarPropiedades.php',
+        'layout' => 'public'
     ],
     
     // Autenticación
@@ -143,7 +166,92 @@ $routes = [
     'admin/propiedades' => [
         'controller' => 'AdminController',
         'action' => 'propiedades',
-        'view' => 'admin/propiedades.php',
+        'view' => 'property/propiedades.php',
+        'layout' => 'admin'
+    ],
+    
+    'admin/crear-propiedad' => [
+        'controller' => 'AdminController',
+        'action' => 'crearPropiedad',
+        'view' => 'property/crearPropiedad.php',
+        'layout' => 'admin'
+    ],
+    
+    'admin/editar-propiedad' => [
+        'controller' => 'AdminController',
+        'action' => 'editarPropiedad',
+        'view' => 'property/editarPropiedad.php',
+        'layout' => 'admin'
+    ],
+    
+    'admin/eliminar-propiedad' => [
+        'controller' => 'AdminController',
+        'action' => 'eliminarPropiedad',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/cambiar-estado-propiedad' => [
+        'controller' => 'AdminController',
+        'action' => 'cambiarEstadoPropiedad',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/toggle-destacado' => [
+        'controller' => 'AdminController',
+        'action' => 'toggleDestacado',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    // Gestión de Imágenes
+    'admin/gestionar-imagenes' => [
+        'controller' => 'ImageController',
+        'action' => 'gestionarImagenes',
+        'view' => 'property/gestionarImagenes.php',
+        'layout' => 'admin'
+    ],
+    
+    'admin/subir-imagenes' => [
+        'controller' => 'ImageController',
+        'action' => 'subirImagenes',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/eliminar-imagen' => [
+        'controller' => 'ImageController',
+        'action' => 'eliminarImagen',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/marcar-principal' => [
+        'controller' => 'ImageController',
+        'action' => 'marcarPrincipal',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/actualizar-orden-imagenes' => [
+        'controller' => 'ImageController',
+        'action' => 'actualizarOrden',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/obtener-imagenes' => [
+        'controller' => 'ImageController',
+        'action' => 'obtenerImagenes',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/vista-previa-imagen' => [
+        'controller' => 'ImageController',
+        'action' => 'vistaPrevia',
+        'view' => 'property/vistaPreviaImagen.php',
         'layout' => 'admin'
     ],
     

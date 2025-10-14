@@ -1,135 +1,144 @@
 <?php
 /**
- * Modelo de Contacto
+ * Modelo de Contactos
  * InmuYa - Sistema de gestión inmobiliaria
  * 
- * Maneja las operaciones de la tabla contactar
+ * Maneja todas las operaciones relacionadas con contactos
  */
-
-require_once __DIR__ . '/../../config/conexion.php';
 
 class ContactModel {
     private $conexion;
     
     public function __construct() {
-        global $conexion;
+        // Incluir la configuración de la base de datos
+        require_once __DIR__ . '/../../config/database.php';
+        
         $this->conexion = $conexion;
     }
     
     /**
-     * Guardar mensaje de contacto
+     * Obtener estadísticas de contactos
      */
-    public function saveContact($nombre, $email, $asunto, $mensaje) {
-        $stmt = $this->conexion->prepare("INSERT INTO contactar (nombre, email, asunto, mensaje) VALUES (?, ?, ?, ?)");
-        if (!$stmt) {
+    public function getContactStats() {
+        try {
+            // Total de contactos
+            $sql = "SELECT COUNT(*) as total FROM contactar";
+            $result = $this->conexion->query($sql);
+            $total = $result->fetch_assoc()['total'];
+            
+            // Contactos nuevos
+            $sql = "SELECT COUNT(*) as nuevos FROM contactar WHERE estado = 'nuevo'";
+            $result = $this->conexion->query($sql);
+            $nuevos = $result->fetch_assoc()['nuevos'];
+            
+            // Contactos leídos
+            $sql = "SELECT COUNT(*) as leidos FROM contactar WHERE estado = 'leido'";
+            $result = $this->conexion->query($sql);
+            $leidos = $result->fetch_assoc()['leidos'];
+            
+            // Contactos respondidos
+            $sql = "SELECT COUNT(*) as respondidos FROM contactar WHERE estado = 'respondido'";
+            $result = $this->conexion->query($sql);
+            $respondidos = $result->fetch_assoc()['respondidos'];
+            
             return [
-                'success' => false,
-                'message' => 'Error al preparar la consulta'
+                'total_contacts' => $total,
+                'nuevos_contacts' => $nuevos,
+                'leidos_contacts' => $leidos,
+                'respondidos_contacts' => $respondidos
             ];
-        }
-        $stmt->bind_param("ssss", $nombre, $email, $asunto, $mensaje);
-        if ($stmt->execute()) {
-            $contactId = $stmt->insert_id;
-            $stmt->close();
+            
+        } catch (Exception $e) {
+            error_log("Error en getContactStats: " . $e->getMessage());
             return [
-                'success' => true,
-                'contact_id' => $contactId,
-                'message' => 'Mensaje guardado correctamente'
-            ];
-        } else {
-            $stmt->close();
-            return [
-                'success' => false,
-                'message' => 'Error al guardar el mensaje'
+                'total_contacts' => 0,
+                'nuevos_contacts' => 0,
+                'leidos_contacts' => 0,
+                'respondidos_contacts' => 0
             ];
         }
     }
     
     /**
-     * Obtener todos los mensajes de contacto
+     * Obtener todos los contactos
      */
     public function getAllContacts($limit = null, $offset = 0) {
-        $sql = "SELECT * FROM contactar ORDER BY id ASC";
-        if ($limit !== null) {
-            $sql .= " LIMIT ? OFFSET ?";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bind_param("ii", $limit, $offset);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $contacts = $result->fetch_all(MYSQLI_ASSOC);
-            $stmt->close();
+        try {
+            $sql = "SELECT * FROM contactar ORDER BY id DESC";
+            
+            if ($limit) {
+                $sql .= " LIMIT ? OFFSET ?";
+                $stmt = $this->conexion->prepare($sql);
+                $stmt->bind_param("ii", $limit, $offset);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                $result = $this->conexion->query($sql);
+            }
+            
+            $contacts = [];
+            while ($row = $result->fetch_assoc()) {
+                $contacts[] = $row;
+            }
+            
             return $contacts;
-        } else {
-            $result = $this->conexion->query($sql);
-            return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
+            
+        } catch (Exception $e) {
+            error_log("Error en getAllContacts: " . $e->getMessage());
+            return [];
         }
     }
     
     /**
-     * Obtener mensaje por ID
+     * Obtener contacto por ID
      */
     public function getContactById($id) {
-        $stmt = $this->conexion->prepare("SELECT * FROM contactar WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $contact = $result->fetch_assoc();
-        $stmt->close();
-        return $contact;
+        try {
+            $sql = "SELECT * FROM contactar WHERE id = ?";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            
+            return $result->fetch_assoc();
+            
+        } catch (Exception $e) {
+            error_log("Error en getContactById: " . $e->getMessage());
+            return null;
+        }
     }
     
     /**
-     * Cambiar estado de un contacto
+     * Cambiar estado de contacto
      */
     public function changeContactStatus($id, $estado) {
-        $estadosValidos = ['nuevo', 'leido', 'respondido', 'cerrado'];
-        
-        if (!in_array($estado, $estadosValidos)) {
-            return [
-                'success' => false,
-                'message' => 'Estado no válido'
-            ];
-        }
-        
-        $stmt = $this->conexion->prepare("UPDATE contactar SET estado = ? WHERE id = ?");
-        $stmt->bind_param("si", $estado, $id);
-        $stmt->execute();
-        $affected = $stmt->affected_rows;
-        $stmt->close();
-        
-        if ($affected > 0) {
-            return [
-                'success' => true,
-                'message' => 'Estado actualizado correctamente'
-            ];
-        } else {
-            return [
-                'success' => false,
-                'message' => 'No se pudo actualizar el estado'
-            ];
+        try {
+            $sql = "UPDATE contactar SET estado = ? WHERE id = ?";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bind_param("si", $estado, $id);
+            
+            return $stmt->execute();
+            
+        } catch (Exception $e) {
+            error_log("Error en changeContactStatus: " . $e->getMessage());
+            return false;
         }
     }
     
     /**
-     * Eliminar mensaje de contacto
+     * Eliminar contacto
      */
     public function deleteContact($id) {
-        $stmt = $this->conexion->prepare("DELETE FROM contactar WHERE id = ?");
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $affected = $stmt->affected_rows;
-        $stmt->close();
-        if ($affected > 0) {
-            return [
-                'success' => true,
-                'message' => 'Mensaje eliminado correctamente'
-            ];
-        } else {
-            return [
-                'success' => false,
-                'message' => 'No se pudo eliminar el mensaje'
-            ];
+        try {
+            $sql = "DELETE FROM contactar WHERE id = ?";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bind_param("i", $id);
+            
+            return $stmt->execute();
+            
+        } catch (Exception $e) {
+            error_log("Error en deleteContact: " . $e->getMessage());
+            return false;
         }
     }
 }
-?>
