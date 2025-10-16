@@ -45,7 +45,7 @@ class PropertyModel {
                 LEFT JOIN barrios b ON p.id_barrio = b.id_barrio 
                 LEFT JOIN usuarios u ON p.id_usuario = u.id_usuario 
                 LEFT JOIN imagenes i ON p.id_propiedad = i.id_propiedad AND i.es_principal = 1 AND i.activo = 1
-                WHERE p.activo = 1";
+                WHERE 1=1";
         
         // Aplicar filtros
         if (!empty($filters['estado'])) {
@@ -131,7 +131,7 @@ class PropertyModel {
                 LEFT JOIN ciudades c ON p.id_ciudad = c.id_ciudad 
                 LEFT JOIN barrios b ON p.id_barrio = b.id_barrio 
                 LEFT JOIN usuarios u ON p.id_usuario = u.id_usuario 
-                WHERE p.id_propiedad = ? AND p.activo = 1";
+                WHERE p.id_propiedad = ?";
         
         $stmt = $this->conexion->prepare($sql);
         
@@ -238,7 +238,7 @@ class PropertyModel {
      * Eliminar propiedad (soft delete)
      */
     public function deleteProperty($id) {
-        $sql = "UPDATE propiedades SET activo = 0 WHERE id_propiedad = ?";
+        $sql = "DELETE FROM propiedades WHERE id_propiedad = ?";
         $stmt = $this->conexion->prepare($sql);
         
         if (!$stmt) {
@@ -289,32 +289,14 @@ class PropertyModel {
     }
     
     /**
-     * Incrementar contador de vistas
-     */
-    public function incrementViews($id) {
-        $sql = "UPDATE propiedades SET vistas = vistas + 1 WHERE id_propiedad = ?";
-        $stmt = $this->conexion->prepare($sql);
-        
-        if (!$stmt) {
-            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
-        }
-        
-        $stmt->bind_param("i", $id);
-        
-        return $stmt->execute();
-    }
-    
-    /**
      * Obtener propiedades destacadas
      */
     public function getFeaturedProperties($limit = 6) {
-        $sql = "SELECT p.*, c.nombre as ciudad_nombre, b.nombre as barrio_nombre,
-                       i.url_imagen as imagen_principal
+        $sql = "SELECT p.*, c.nombre as ciudad_nombre, b.nombre as barrio_nombre
                 FROM propiedades p 
                 LEFT JOIN ciudades c ON p.id_ciudad = c.id_ciudad 
                 LEFT JOIN barrios b ON p.id_barrio = b.id_barrio 
-                LEFT JOIN imagenes i ON p.id_propiedad = i.id_propiedad AND i.es_principal = 1 AND i.activo = 1
-                WHERE p.destacado = 1 AND p.activo = 1 AND p.estado = 'disponible'
+                WHERE p.destacado = 1 AND p.estado = 'disponible'
                 ORDER BY p.fecha_publicacion DESC 
                 LIMIT ?";
         
@@ -330,13 +312,6 @@ class PropertyModel {
         
         $properties = [];
         while ($row = $result->fetch_assoc()) {
-            // Construir la URL completa de la imagen
-            if ($row['imagen_principal']) {
-                $row['imagen_principal'] = BASE_URL . 'public/img/propiedades/propiedad_' . $row['id_propiedad'] . '/' . $row['imagen_principal'];
-            } else {
-                // Imagen por defecto si no hay imagen principal
-                $row['imagen_principal'] = BASE_URL . 'public/img/anuncio1.jpg';
-            }
             $properties[] = $row;
         }
         
@@ -350,25 +325,25 @@ class PropertyModel {
         $stats = [];
         
         // Total de propiedades
-        $result = $this->conexion->query("SELECT COUNT(*) as total FROM propiedades WHERE activo = 1");
+        $result = $this->conexion->query("SELECT COUNT(*) as total FROM propiedades");
         $stats['total_properties'] = $result->fetch_assoc()['total'];
         
         // Propiedades por tipo
-        $result = $this->conexion->query("SELECT tipo, COUNT(*) as count FROM propiedades WHERE activo = 1 GROUP BY tipo");
+        $result = $this->conexion->query("SELECT tipo, COUNT(*) as count FROM propiedades GROUP BY tipo");
         $stats['by_type'] = [];
         while ($row = $result->fetch_assoc()) {
             $stats['by_type'][$row['tipo']] = $row['count'];
         }
         
         // Propiedades por estado
-        $result = $this->conexion->query("SELECT estado, COUNT(*) as count FROM propiedades WHERE activo = 1 GROUP BY estado");
+        $result = $this->conexion->query("SELECT estado, COUNT(*) as count FROM propiedades GROUP BY estado");
         $stats['by_status'] = [];
         while ($row = $result->fetch_assoc()) {
             $stats['by_status'][$row['estado']] = $row['count'];
         }
         
         // Propiedades destacadas
-        $result = $this->conexion->query("SELECT COUNT(*) as count FROM propiedades WHERE destacado = 1 AND activo = 1");
+        $result = $this->conexion->query("SELECT COUNT(*) as count FROM propiedades WHERE destacado = 1");
         $stats['featured'] = $result->fetch_assoc()['count'];
         
         return $stats;
@@ -382,7 +357,7 @@ class PropertyModel {
                 FROM propiedades p 
                 LEFT JOIN ciudades c ON p.id_ciudad = c.id_ciudad 
                 LEFT JOIN barrios b ON p.id_barrio = b.id_barrio 
-                WHERE p.activo = 1 AND (
+                WHERE (
                     p.titulo LIKE ? OR 
                     p.descripcion LIKE ? OR 
                     p.direccion LIKE ? OR

@@ -10,16 +10,8 @@ if (!defined('BASE_URL')) {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
     
-    // Obtener el directorio del script actual
-    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
-    
-    // Si estamos en el directorio raíz del proyecto
-    if ($scriptDir === '/' || $scriptDir === '') {
-        $baseUrl = $protocol . '://' . $host . '/';
-    } else {
-        // Construir la URL base con el directorio del script
-        $baseUrl = $protocol . '://' . $host . $scriptDir . '/';
-    }
+    // Para este proyecto específico, usar la ruta correcta
+    $baseUrl = $protocol . '://' . $host . '/InmuYa/InmuYa-main%20(1)/';
     
     define('BASE_URL', $baseUrl);
 }

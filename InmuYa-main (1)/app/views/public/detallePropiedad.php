@@ -444,10 +444,6 @@ include __DIR__ . '/../layouts/public.php';
         
         <div class="property-meta">
             <div class="meta-item">
-                <i class="fas fa-eye"></i>
-                <span><?php echo $propiedad['vistas']; ?> vistas</span>
-            </div>
-            <div class="meta-item">
                 <i class="fas fa-calendar"></i>
                 <span>Publicado: <?php echo date('d/m/Y', strtotime($propiedad['fecha_publicacion'])); ?></span>
             </div>

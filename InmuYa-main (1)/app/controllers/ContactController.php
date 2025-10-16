@@ -63,8 +63,8 @@ class ContactController {
                 $result = $this->contactModel->saveContact($nombre, $email, $asunto, $mensaje);
                 
                 if ($result['success']) {
-                    // Redirigir con mensaje de éxito
-                    header('Location: ' . BASE_URL . '?contact_success=1#contacto');
+                    // Redirigir con mensaje de éxito (sin #contacto para evitar scroll automático)
+                    header('Location: ' . BASE_URL . '?contact_success=1');
                     exit;
                 } else {
                     // Redirigir con mensaje de error

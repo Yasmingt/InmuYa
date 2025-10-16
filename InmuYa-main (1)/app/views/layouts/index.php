@@ -7,6 +7,7 @@
     <link rel="icon" type="image/jpeg" href="<?php echo BASE_URL; ?>public/img/logo.jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/app.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/carousel.css">
 </head>
 <body>
     <!-- Header completo para index -->

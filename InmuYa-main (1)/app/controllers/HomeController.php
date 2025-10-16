@@ -30,7 +30,7 @@ class HomeController {
         foreach ($propiedadesDestacadas as &$propiedad) {
             $imagenPrincipal = $this->imageModel->getMainImage($propiedad['id_propiedad']);
             if ($imagenPrincipal) {
-                $propiedad['imagen_principal'] = BASE_URL . 'public/img/propiedades/propiedad_' . $propiedad['id_propiedad'] . '/' . $imagenPrincipal['url_imagen'];
+                $propiedad['imagen_principal'] = BASE_URL . 'public/img/' . $imagenPrincipal['url_imagen'];
             } else {
                 $propiedad['imagen_principal'] = BASE_URL . 'public/img/edificio.jpg';
             }

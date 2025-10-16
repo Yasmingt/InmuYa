@@ -97,9 +97,6 @@ class PublicPropertyController {
             }
         }
         
-        // Incrementar contador de vistas
-        $this->propertyModel->incrementViews($propertyId);
-        
         // Incluir la vista
         include __DIR__ . '/../views/public/detallePropiedad.php';
     }

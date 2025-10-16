@@ -263,17 +263,12 @@ body {
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
     border-top: 4px solid var(--color-terciario);
+    text-align: center;
 }
 
 .servicio-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-}
-
-.servicio-card i {
-    font-size: 2rem;
-    color: var(--color-terciario);
-    margin-bottom: 1rem;
 }
 
 .servicio-card h3 {
@@ -284,7 +279,7 @@ body {
 
 .servicio-card p {
     line-height: 1.6;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
 }
 
 .enlace-servicio {
@@ -410,6 +405,14 @@ body {
 .seccion-contacto {
     background: var(--color-secundario);
     color: var(--color-blanco);
+}
+
+.seccion-contacto .titulo-seccion {
+    color: var(--color-blanco);
+}
+
+.seccion-contacto .subtitulo-seccion {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .contenido-contacto {
@@ -1006,5 +1009,85 @@ html {
         max-width: 300px;
         text-align: center;
         padding: 1rem;
+    }
+}
+
+/* ===== NOTIFICACIONES DE ÉXITO ===== */
+.notification-success {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    z-index: 10000;
+    transform: translateX(400px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 320px;
+    min-width: 280px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.notification-success.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification-success i.fa-check-circle {
+    font-size: 20px;
+    color: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.notification-message {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-message strong {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.notification-message span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.3;
+    display: block;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .notification-success {
+        top: 15px;
+        right: 15px;
+        left: 15px;
+        max-width: none;
+        min-width: auto;
+        transform: translateY(-100px);
+    }
+    
+    .notification-success.show {
+        transform: translateY(0);
+    }
+    
+    .notification-message strong {
+        font-size: 14px;
+    }
+    
+    .notification-message span {
+        font-size: 12px;
     }
 }
