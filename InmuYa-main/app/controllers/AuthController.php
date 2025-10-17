@@ -11,14 +11,12 @@ class AuthController {
     
     public function __construct() {
         // Incluir el modelo de usuario
-        require_once __DIR__ . '/../models/UserModel.php';
-        $this->userModel = new UserModel();
+        require_once __DIR__ . '/../models/UsuarioModel.php';
+        $this->usuarioModel = new UsuarioModel();
     }
     
-    /**
-     * Mostrar login
-     */
-    public function showLogin($error = null, $success = null) {
+    /** Mostrar login */
+    public function mostrarLogin($error = null, $success = null) {
         $title = 'Iniciar Sesión - InmuYa';
         $description = 'Inicia sesión en tu cuenta de InmuYa';
         
@@ -26,10 +24,8 @@ class AuthController {
         include __DIR__ . '/../views/auth/login.php';
     }
     
-    /**
-     * Procesar login
-     */
-    public function processLogin() {
+    /** Procesar login */
+    public function procesarLogin() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
@@ -37,66 +33,61 @@ class AuthController {
             // Validar datos
             if (empty($email) || empty($password)) {
                 $error = 'Por favor, completa todos los campos';
-                $this->showLogin($error);
+                $this->mostrarLogin($error);
                 return;
             }
             
             // Verificar credenciales
-            $user = $this->userModel->getUserByEmail($email);
+            $usuario = $this->usuarioModel->usuarioPorEmail($email);
             
             // Verificar contraseña (compatible con texto plano y hash)
             $passwordValid = false;
-            if ($user) {
+            if ($usuario) {
                 // Primero intentar con password_verify (para contraseñas hasheadas)
-                if (password_verify($password, $user['contrasena'])) {
+                if (password_verify($password, $usuario['contrasena'])) {
                     $passwordValid = true;
                 } 
                 // Si falla, verificar como texto plano (para contraseñas existentes)
-                elseif ($password === $user['contrasena']) {
+                elseif ($password === $usuario['contrasena']) {
                     $passwordValid = true;
                     // Actualizar la contraseña a hash para mayor seguridad
-                    $this->userModel->changePassword($user['id_usuario'], $password);
+                    $this->usuarioModel->cambiarContrasena($usuario['id_usuario'], $password);
                 }
             }
             
-            if ($user && $passwordValid) {
+            if ($usuario && $passwordValid) {
                 // Iniciar sesión
                 session_start();
-                $_SESSION['user_id'] = $user['id_usuario'];
-                $_SESSION['user_name'] = $user['nombre'];
-                $_SESSION['user_email'] = $user['email'];
-                $_SESSION['tipo_usuario'] = $user['tipo_usuario'];
-                $_SESSION['user_type'] = $user['tipo_usuario']; // Agregar para compatibilidad
+                $_SESSION['user_id'] = $usuario['id_usuario'];
+                $_SESSION['user_name'] = $usuario['nombre'];
+                $_SESSION['user_email'] = $usuario['email'];
+                $_SESSION['user_type'] = $usuario['tipo_usuario'];
                 
                 // Regenerar ID de sesión por seguridad
                 session_regenerate_id(true);
                 
                 // Redirigir según tipo de usuario
-                $this->redirectAfterLogin($user['tipo_usuario']);
+                $this->redirigirDespuesDelLogin($usuario['tipo_usuario']);
             } else {
                 $error = 'Credenciales incorrectas';
-                $this->showLogin($error);
+                $this->mostrarLogin($error);
             }
         } else {
-            $this->showLogin();
+            $this->mostrarLogin();
         }
     }
     
-    /**
-     * Mostrar formulario de registro
-     */
-    public function showRegister($error = null, $success = null) {
+    /** Mostrar formulario de registro */
+    public function mostrarFormularioRegistro($error = null, $success = null) {
         $title = 'Registrarse - InmuYa';
         $description = 'Crea tu cuenta en InmuYa y comienza a buscar tu hogar ideal';
         
         // Incluir la vista de registro
-        include __DIR__ . '/../views/auth/registration.php';
+        include __DIR__ . '/../views/auth/registro.php';
     }
     
-    /**
-     * Procesar registro
-     */
-    public function processRegister() {
+    /** Procesar registro */
+    public function procesarRegistro() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Mapear tipos de documento de texto a números
             $tiposDocumento = [
@@ -121,43 +112,39 @@ class AuthController {
             ];
             
             // Validar datos
-            $validation = $this->validateRegisterData($data);
+            $validation = $this->validarDatosRegistro($data);
             
             if ($validation['valid']) {
                 // Hash de contraseña
                 $data['contrasena'] = password_hash($data['contrasena'], PASSWORD_DEFAULT);
                 // Crear usuario
-                if ($this->userModel->createUser($data)) {
+                if ($this->usuarioModel->crearUsuario($data)) {
                     header('Location: ' . BASE_URL . 'index.php?route=auth/login&success=1');
                     exit;
                 } else {
                     $error = 'Error al crear la cuenta. Inténtalo de nuevo.';
-                    $this->showRegister($error);
+                    $this->mostrarFormularioRegistro($error);
                 }
             } else {
                 $error = $validation['message'];
-                $this->showRegister($error);
+                $this->mostrarFormularioRegistro($error);
             }
         } else {
-            $this->showRegister();
+            $this->mostrarFormularioRegistro();
         }
     }
     
-    /**
-     * Mostrar formulario de recuperación de contraseña
-     */
-    public function showRecover($error = null, $success = null) {
+    /** Mostrar formulario de recuperación de contraseña */
+    public function mostrarFormularioRecuperacionContrasena($error = null, $success = null) {
         $title = 'Recuperar Contraseña - InmuYa';
         $description = 'Recupera el acceso a tu cuenta de InmuYa';
         
         // Incluir la vista de recuperación
-        include __DIR__ . '/../views/auth/recoverPassword.php';
+        include __DIR__ . '/../views/auth/recuperarContrasena.php';
     }
     
-    /**
-     * Procesar recuperación de contraseña
-     */
-    public function processRecover() {
+    /**Procesar recuperación de contraseña */
+    public function procesarRecuperacionContrasena() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $newPassword = $_POST['new_password'] ?? '';
@@ -167,28 +154,28 @@ class AuthController {
             
             if (empty($email) || empty($newPassword) || empty($confirmPassword)) {
                 $error = 'Todos los campos son obligatorios';
-                $this->showRecover($error);
+                $this->mostrarFormularioRecuperacionContrasena($error);
                 return;
             }
             
             if ($newPassword !== $confirmPassword) {
                 $error = 'Las contraseñas no coinciden';
-                $this->showRecover($error);
+                $this->mostrarFormularioRecuperacionContrasena($error);
                 return;
             }
             
             if (strlen($newPassword) < 8) {
                 $error = 'La contraseña debe tener al menos 8 caracteres';
-                $this->showRecover($error);
+                $this->mostrarFormularioRecuperacionContrasena($error);
                 return;
             }
             
             // Verificar si el email existe
-            $user = $this->userModel->getUserByEmail($email);
+            $usuario = $this->usuarioModel->usuarioPorEmail($email);
             
-            if ($user) {
+            if ($usuario) {
                 // Actualizar contraseña directamente
-                if ($this->userModel->changePassword($user['id_usuario'], $newPassword)) {
+                if ($this->usuarioModel->cambiarContrasena($usuario['id_usuario'], $newPassword)) {
                     $success = 'Contraseña actualizada exitosamente. Ya puedes iniciar sesión con tu nueva contraseña.';
                 } else {
                     $error = 'Error al actualizar la contraseña. Inténtalo de nuevo.';
@@ -197,34 +184,30 @@ class AuthController {
                 $error = 'No se encontró un usuario con ese correo electrónico.';
             }
             
-            $this->showRecover($error, $success);
+            $this->mostrarFormularioRecuperacionContrasena($error, $success);
         } else {
-            $this->showRecover();
+            $this->mostrarFormularioRecuperacionContrasena();
         }
     }
     
     
-    /**
-     * Cerrar sesión
-     */
-    public function logout() {
-        session_start();
-        session_destroy();
-        header('Location: ' . BASE_URL . 'index.php?route=auth/login');
-        exit;
+    /** Cerrar sesión */
+    public function cerrarSesion() {
+    session_start();
+    session_destroy();
+    header('Location: ' . BASE_URL . 'index.php');
+    exit;
     }
     
-    /**
-     * Validar datos de registro
-     */
-    private function validateRegisterData($data) {
+    /** Validar datos de registro */
+    private function validarDatosRegistro($data) {
         // Validar ID de usuario
         if (empty($data['id_usuario']) || $data['id_usuario'] <= 0) {
             return ['valid' => false, 'message' => 'La identificación es requerida y debe ser un número válido'];
         }
         
         // Verificar si el ID ya existe
-        if ($this->userModel->idExists($data['id_usuario'])) {
+        if ($this->usuarioModel->idExiste($data['id_usuario'])) {
             return ['valid' => false, 'message' => 'Ya existe un usuario con esta identificación'];
         }
         
@@ -239,7 +222,7 @@ class AuthController {
         }
         
         // Verificar si el email ya existe
-        if ($this->userModel->emailExists($data['email'])) {
+        if ($this->usuarioModel->emailExiste($data['email'])) {
             return ['valid' => false, 'message' => 'Ya existe un usuario con este email'];
         }
         
@@ -260,10 +243,8 @@ class AuthController {
         return ['valid' => true, 'message' => ''];
     }
     
-    /**
-     * Redirigir después del login según tipo de usuario
-     */
-    private function redirectAfterLogin($userType) {
+    /** Redirigir después del login según tipo de usuario */
+    private function redirigirDespuesDelLogin($userType) {
         switch ($userType) {
             case 'admin':
                 header('Location: ' . BASE_URL . 'index.php?route=admin/dashboard');

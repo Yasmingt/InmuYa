@@ -11,7 +11,7 @@ $pageTitle = 'Gestión de Contactos';
 $currentPage = 'contactos';
 
 // Incluir el layout de administrador
-include __DIR__ . '/../layouts/admin.php';
+include __DIR__ . '/../../layouts/admin.php';
 ?>
 
 <!-- Contenido específico de gestión de contactos -->

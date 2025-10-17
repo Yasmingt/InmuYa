@@ -11,7 +11,7 @@ if (!defined('BASE_URL')) {
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
     
     // Para este proyecto específico, usar la ruta correcta
-    $baseUrl = $protocol . '://' . $host . '/InmuYa/InmuYa-main%20(1)/';
+    $baseUrl = $protocol . '://' . $host . '/InmuYa/InmuYa-main/';
     
     define('BASE_URL', $baseUrl);
 }

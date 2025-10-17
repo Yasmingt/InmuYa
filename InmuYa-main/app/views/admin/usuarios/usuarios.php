@@ -11,7 +11,7 @@ $pageTitle = 'Gestión de Usuarios';
 $currentPage = 'usuarios';
 
 // Incluir el layout de administrador
-include __DIR__ . '/../layouts/admin.php';
+include __DIR__ . '/../../layouts/admin.php';
 ?>
 
 <!-- CSS específico para gestión de usuarios ya cargado en admin.php -->

@@ -3,15 +3,15 @@
  * Modelo de Contactos
  * InmuYa - Sistema de gestión inmobiliaria
  * 
- * Maneja todas las operaciones relacionadas con contactar
+ * Maneja todas las operaciones relacionadas con contactos
  */
 
-class ContactModel {
+class ContactosModel {
     private $conexion;
     
     public function __construct() {
         // Incluir la configuración de la base de datos
-        require_once __DIR__ . '/../../config/conexion.php';
+        require_once __DIR__ . '/../../config/database.php';
         
         // Verificar que la conexión esté disponible
         if (isset($conexion)) {
@@ -34,10 +34,8 @@ class ContactModel {
         }
     }
     
-    /**
-     * Obtener estadísticas de contactos
-     */
-    public function getContactStats() {
+    /** Obtener estadísticas de contactos */
+    public function obtenerEstadisticasContactos() {
         try {
             // Total de contactos
             $sql = "SELECT COUNT(*) as total FROM contactar";
@@ -77,10 +75,8 @@ class ContactModel {
         }
     }
     
-    /**
-     * Obtener todos los contactos
-     */
-    public function getAllContacts($limit = null, $offset = 0) {
+    /** Obtener todos los contactos */
+    public function obtenerTodosLosContactos($limit = null, $offset = 0) {
         try {
             $sql = "SELECT * FROM contactar ORDER BY id DESC";
             
@@ -107,10 +103,8 @@ class ContactModel {
         }
     }
     
-    /**
-     * Obtener contacto por ID
-     */
-    public function getContactById($id) {
+    /** Obtener contacto por ID */
+    public function obtenerContactoPorId($id) {
         try {
             $sql = "SELECT * FROM contactar WHERE id = ?";
             $stmt = $this->conexion->prepare($sql);
@@ -126,10 +120,8 @@ class ContactModel {
         }
     }
     
-    /**
-     * Cambiar estado de contacto
-     */
-    public function changeContactStatus($id, $estado) {
+    /** Cambiar estado de contacto */
+    public function cambiarEstadoContacto($id, $estado) {
         try {
             $sql = "UPDATE contactar SET estado = ? WHERE id = ?";
             $stmt = $this->conexion->prepare($sql);
@@ -143,10 +135,8 @@ class ContactModel {
         }
     }
     
-    /**
-     * Guardar nuevo contacto
-     */
-    public function saveContact($nombre, $email, $asunto, $mensaje) {
+    /** Guardar nuevo contacto */
+    public function guardarContacto($nombre, $email, $asunto, $mensaje) {
         try {
             // Verificar que la conexión esté disponible
             if (!$this->conexion) {
@@ -174,10 +164,8 @@ class ContactModel {
         }
     }
     
-    /**
-     * Eliminar contacto
-     */
-    public function deleteContact($id) {
+    /** Eliminar contacto */
+    public function eliminarContacto($id) {
         try {
             $sql = "DELETE FROM contactar WHERE id = ?";
             $stmt = $this->conexion->prepare($sql);

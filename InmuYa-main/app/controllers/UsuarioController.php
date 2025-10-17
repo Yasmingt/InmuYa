@@ -6,19 +6,17 @@
  * Maneja todas las operaciones relacionadas con usuarios
  */
 
-require_once __DIR__ . '/../models/UserModel.php';
+require_once __DIR__ . '/../models/UsuarioModel.php';
 
-class UserController {
-    private $userModel;
+class UsuarioController {
+    private $usuarioModel;
     
     public function __construct() {
-        $this->userModel = new UserModel();
+        $this->usuarioModel = new UsuarioModel();
     }
     
-    /**
-     * Verificar acceso de administrador
-     */
-    private function checkAdminAccess() {
+    /** Verificar acceso de administrador */
+    private function verificarAccesoAdministrador() {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -36,14 +34,12 @@ class UserController {
         }
     }
     
-    /**
-     * Mostrar gestión de usuarios para administradores
-     */
-    public function showUsers() {
-        $this->checkAdminAccess();
+    /** Mostrar gestión de usuarios para administradores */
+    public function mostrarGestionUsuarios() {
+        $this->verificarAccesoAdministrador();
         
         // Obtener todos los usuarios desde la base de datos
-        $usuarios = $this->userModel->getAllUsers();
+        $usuarios = $this->usuarioModel->obtenerTodosLosUsuarios();
         
         // Definir variables para el layout
         $title = 'Gestión de Usuarios ';
@@ -51,14 +47,12 @@ class UserController {
         $pageTitle = 'Gestión de Usuarios';
         
         // Incluir la vista
-        include __DIR__ . '/../views/user/usuarios.php';
+        include __DIR__ . '/../views/admin/usuarios/usuarios.php';
     }
     
-    /**
-     * Mostrar formulario de creación de usuario
-     */
-    public function showCreateUser() {
-        $this->checkAdminAccess();
+    /** Mostrar formulario de creación de usuario */
+    public function mostrarFormularioCreacionUsuario() {
+        $this->verificarAccesoAdministrador();
         
         // Definir variables para el layout
         $title = 'Crear Nuevo Usuario';
@@ -66,27 +60,25 @@ class UserController {
         $pageTitle = 'Crear Nuevo Usuario';
         
         // Incluir la vista
-        include __DIR__ . '/../views/user/newUsuario.php';
+        include __DIR__ . '/../views/admin/usuarios/actualizarUsuario.php';
     }
     
-    /**
-     * Mostrar formulario de edición de usuario
-     */
-    public function showEditUser() {
-        $this->checkAdminAccess();
+    /** Mostrar formulario de actualización de usuario*/
+    public function mostrarFormularioActualizacionUsuario() {
+        $this->verificarAccesoAdministrador();
         
         $user_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         
         if ($user_id <= 0) {
-            header('Location: ' . BASE_URL . 'index.php?route=user/usuarios');
+            header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios');
             exit;
         }
         
         // Obtener datos del usuario
-        $usuario = $this->userModel->getUserById($user_id);
+        $usuario = $this->usuarioModel->usuarioPorId($user_id);
         
         if (!$usuario) {
-            header('Location: ' . BASE_URL . 'index.php?route=user/usuarios');
+            header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios');
             exit;
         }
         
@@ -96,20 +88,18 @@ class UserController {
         $pageTitle = 'Editar Usuario';
         
         // Incluir la vista de edición
-        include __DIR__ . '/../views/user/updateUsuario.php';
+        include __DIR__ . '/../views/admin/usuarios/actualizarUsuario.php';
     }
     
-    /**
-     * Procesar actualización de usuario
-     */
-    public function updateUser() {
-        $this->checkAdminAccess();
+    /** Procesar actualización de usuario */
+    public function procesarActualizacionUsuario() {
+        $this->verificarAccesoAdministrador();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
             
             if ($user_id <= 0) {
-                header('Location: ' . BASE_URL . 'index.php?route=user/usuarios');
+                header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios');
                 exit;
             }
             
@@ -158,7 +148,7 @@ class UserController {
                         'tipo_usuario' => $tipo_usuario
                     ]);
                     
-                    header('Location: ' . BASE_URL . 'index.php?route=user/usuarios&success=1');
+                    header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios&success=1');
                     exit;
                 } catch (Exception $e) {
                     $errors[] = 'Error al actualizar el usuario: ' . $e->getMessage();
@@ -166,28 +156,26 @@ class UserController {
             }
             
             // Si hay errores, volver al formulario
-            $usuario = $this->userModel->getUserById($user_id);
+            $usuario = $this->usuarioModel->usuarioPorId($user_id);
             $title = 'Editar Usuario - Panel de Administración';
             $description = 'Editar información del usuario';
             $pageTitle = 'Editar Usuario';
             
-            include __DIR__ . '/../views/user/updateUsuario.php';
+            include __DIR__ . '/../views/admin/usuarios/actualizarUsuario.php';
         } else {
-            $this->showUsers();
+            $this->mostrarGestionUsuarios();
         }
     }
     
-    /**
-     * Eliminar usuario
-     */
-    public function deleteUser() {
-        $this->checkAdminAccess();
+    /** Eliminar usuario */
+    public function eliminarUsuario() {
+        $this->verificarAccesoAdministrador();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
             $user_id = (int)$_POST['user_id'];
             
             try {
-                $result = $this->userModel->deleteUser($user_id);
+                $result = $this->usuarioModel->eliminarUsuario($user_id);
                 
                 header('Content-Type: application/json');
                 echo json_encode([
@@ -213,11 +201,9 @@ class UserController {
         exit;
     }
     
-    /**
-     * Crear nuevo usuario usando la lógica de registro
-     */
-    public function createUser() {
-        $this->checkAdminAccess();
+    /** Crear nuevo usuario usando la lógica de registro */
+    public function crearUsuario() {
+        $this->verificarAccesoAdministrador();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Preparar datos del formulario usando la misma estructura que el registro
@@ -235,7 +221,7 @@ class UserController {
             ];
             
             // Validar datos usando la misma lógica del registro
-            $validation = $this->validateUserData($data);
+            $validation = $this->validarDatosUsuario($data);
             
             if ($validation['valid']) {
                 try {
@@ -243,10 +229,10 @@ class UserController {
                     $data['contrasena'] = password_hash($data['contrasena'], PASSWORD_DEFAULT);
                     
                     // Crear usuario
-                    $result = $this->userModel->createUser($data);
+                    $result = $this->usuarioModel->crearUsuario($data);
                     
                     if ($result) {
-                        header('Location: ' . BASE_URL . 'index.php?route=user/usuarios&success=1');
+                        header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios&success=1');
                         exit;
                     } else {
                         $errors[] = 'Error al crear el usuario. Inténtalo de nuevo.';
@@ -263,16 +249,14 @@ class UserController {
             $description = 'Crear nuevo usuario';
             $pageTitle = 'Nuevo Usuario';
             
-            include __DIR__ . '/../views/user/newUsuario.php';
+            include __DIR__ . '/../views/admin/usuarios/actualizarUsuario.php';
         } else {
             $this->showUsers();
         }
     }
     
-    /**
-     * Validar datos de usuario 
-     */
-    private function validateUserData($data) {
+    /** Validar datos de usuario */
+    private function validarDatosUsuario($data) {
         // Validar nombre
         if (empty($data['nombre']) || strlen($data['nombre']) < 2) {
             return ['valid' => false, 'message' => 'El nombre debe tener al menos 2 caracteres'];
@@ -284,7 +268,7 @@ class UserController {
         }
         
         // Verificar si el email ya existe
-        if ($this->userModel->emailExists($data['email'])) {
+        if ($this->usuarioModel->emailExiste($data['email'])) {
             return ['valid' => false, 'message' => 'Ya existe un usuario con este email'];
         }
         
@@ -294,7 +278,7 @@ class UserController {
         }
         
         // Verificar si el número de documento ya existe
-        if ($this->userModel->idExists($data['numerodocumento'])) {
+        if ($this->usuarioModel->idExiste($data['numerodocumento'])) {
             return ['valid' => false, 'message' => 'Ya existe un usuario con este número de documento'];
         }
         

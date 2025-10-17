@@ -6,7 +6,7 @@
  * Maneja todas las operaciones relacionadas con usuarios en la base de datos
  */
 
-class UserModel {
+class UsuarioModel {
     private $conexion;
     
     public function __construct() {
@@ -34,10 +34,8 @@ class UserModel {
         }
     }
     
-    /**
-     * Obtener usuario por email
-     */
-    public function getUserByEmail($email) {
+    /** Obtener usuario por email */
+    public function usuarioPorEmail($email) {
         $stmt = $this->conexion->prepare("SELECT * FROM usuarios WHERE email = ?");
         
         if (!$stmt) {
@@ -55,10 +53,8 @@ class UserModel {
         return false;
     }
     
-    /**
-     * Obtener usuario por ID
-     */
-    public function getUserById($id) {
+    /** Obtener usuario  por ID*/
+    public function usuarioPorId($id) {
         $stmt = $this->conexion->prepare("SELECT * FROM usuarios WHERE id_usuario = ?");
         
         if (!$stmt) {
@@ -76,12 +72,10 @@ class UserModel {
         return false;
     }
     
-    /**
-     * Crear nuevo usuario
-     */
-    public function createUser($data) {
+    /** Crear nuevo usuario */
+    public function crearUsuario($data) {
         // Generar un ID único para el usuario
-        $id_usuario = $this->generateUserId();
+        $id_usuario = $this->generarIdUsuario();
         
         $sql = "INSERT INTO usuarios (id_usuario, nombre, email, telefono, tipodocumento, numerodocumento, fechadenacimiento, contrasena, tipo_usuario) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -113,10 +107,8 @@ class UserModel {
         return $result;
     }
     
-    /**
-     * Generar un ID único para el usuario
-     */
-    private function generateUserId() {
+    /** Generar un ID único para el usuario */
+    private function generarIdUsuario() {
         // Obtener el último ID usado
         $sql = "SELECT MAX(id_usuario) as max_id FROM usuarios";
         $result = $this->conexion->query($sql);
@@ -130,10 +122,8 @@ class UserModel {
         return 1;
     }
     
-    /**
-     * Actualizar usuario
-     */
-    public function updateUser($id, $data) {
+    /** Actualizar usuario */
+    public function actualizarUsuario($id, $data) {
         $sql = "UPDATE usuarios SET nombre = ?, email = ?, telefono = ?, tipodocumento = ?, 
                 numerodocumento = ?, fechadenacimiento = ?, tipo_usuario = ? 
                 WHERE id_usuario = ?";
@@ -158,10 +148,8 @@ class UserModel {
         return $stmt->execute();
     }
     
-    /**
-     * Cambiar contraseña
-     */
-    public function changePassword($id, $newPassword) {
+    /** Cambiar contraseña */
+    public function cambiarContrasena($id, $newPassword) {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         
         $sql = "UPDATE usuarios SET contrasena = ? WHERE id_usuario = ?";
@@ -175,11 +163,9 @@ class UserModel {
         
         return $stmt->execute();
     }
-    
-    /**
-     * Eliminar usuario
-     */
-    public function deleteUser($id) {
+
+    /** Eliminar usuario */
+    public function eliminarUsuario($id) {
         $sql = "DELETE FROM usuarios WHERE id_usuario = ?";
         $stmt = $this->conexion->prepare($sql);
         
@@ -192,10 +178,8 @@ class UserModel {
         return $stmt->execute();
     }
     
-    /**
-     * Obtener todos los usuarios
-     */
-    public function getAllUsers($limit = null, $offset = 0) {
+    /** Obtener todos los usuarios */
+    public function obtenerTodosLosUsuarios($limit = null, $offset = 0) {
         $sql = "SELECT * FROM usuarios ORDER BY nombre ASC";
         
         if ($limit) {
@@ -226,10 +210,8 @@ class UserModel {
         return $users;
     }
     
-    /**
-     * Verificar si el email ya existe
-     */
-    public function emailExists($email, $excludeId = null) {
+    /** Verificar si el email ya existe */
+    public function emailExiste($email, $excludeId = null) {
         $sql = "SELECT id_usuario FROM usuarios WHERE email = ?";
         
         if ($excludeId) {
@@ -257,10 +239,8 @@ class UserModel {
         return $result->num_rows > 0;
     }
     
-    /**
-     * Verificar si la identificación ya existe
-     */
-    public function idExists($identificacion, $excludeId = null) {
+    /** Verificar si la identificación ya existe */
+    public function idExiste($identificacion, $excludeId = null) {
         $sql = "SELECT id_usuario FROM usuarios WHERE id_usuario = ?";
         
         if ($excludeId) {
@@ -288,11 +268,8 @@ class UserModel {
         return $result->num_rows > 0;
     }
     
-    
-    /**
-     * Obtener estadísticas de usuarios
-     */
-    public function getUserStats() {
+    /** Obtener estadísticas de usuarios */
+    public function obtenerEstadisticasUsuarios() {
         $stats = [];
         
         // Total de usuarios

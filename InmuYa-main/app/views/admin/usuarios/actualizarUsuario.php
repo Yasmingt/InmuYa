@@ -38,7 +38,7 @@ $currentPage = 'usuarios';
             <p class="section-subtitle">Modificar información del usuario</p>
         </div>
         <div class="card-actions">
-            <a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios" class="btn btn-secondary">
+            <a href="<?php echo BASE_URL; ?>index.php?route=admin/user/usuarios" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i>
                 Volver a Usuarios
             </a>

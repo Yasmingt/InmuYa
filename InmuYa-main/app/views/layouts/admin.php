@@ -40,7 +40,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <nav class="navegacion-principal">
                     <ul class="menu-navegacion">
                         <li><a href="<?php echo BASE_URL; ?>index.php?route=admin/dashboard">Dashboard</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios">Usuarios</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>index.php?route=admin/usuarios/usuarios">Usuarios</a></li>
                         <li><a href="<?php echo BASE_URL; ?>index.php?route=admin/propiedades">Propiedades</a></li>
                         <li><a href="<?php echo BASE_URL; ?>index.php?route=admin/contactos">Contactos</a></li>
                     </ul>
@@ -71,7 +71,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         </button>
                         <ul class="user-dropdown">
                             <li>
-                                <a href="<?php echo BASE_URL; ?>index.php?route=auth/logout">
+                                <a href="<?php echo BASE_URL; ?>index.php?route=auth/cerrar-sesion">
                                     <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                                 </a>
                             </li>

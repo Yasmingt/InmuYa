@@ -64,7 +64,7 @@ include __DIR__ . '/../layouts/admin.php';
                         <p class="section-subtitle">Últimos usuarios registrados</p>
                     </div>
                     <div class="card-actions">
-                        <a href="<?php echo BASE_URL; ?>index.php?route=user/usuarios" class="btn btn-primary">
+                        <a href="<?php echo BASE_URL; ?>index.php?route=admin/usuarios/usuarios" class="btn btn-primary">
                             <i class="fas fa-eye"></i>
                             Ver todos
                         </a>
@@ -117,7 +117,7 @@ include __DIR__ . '/../layouts/admin.php';
                 <div class="section-header">
                     <h3 class="section-title">Acciones Rápidas</h3>
                 </div>
-                <a href="<?php echo BASE_URL; ?>index.php?route=user/new" class="quick-action-item">
+                <a href="<?php echo BASE_URL; ?>index.php?route=admin/usuarios/nuevo" class="quick-action-item">
                     <div class="quick-action-icon">
                         <i class="fas fa-user-plus"></i>
                     </div>

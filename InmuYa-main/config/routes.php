@@ -61,52 +61,52 @@ $routes = [
     // Autenticación
     'auth/login' => [
         'controller' => 'AuthController',
-        'action' => 'showLogin',
+        'action' => 'mostrarLogin',
         'view' => 'auth/login.php',
         'layout' => 'login'
     ],
 
     // Recuperación de contraseña
-    'auth/recoverPassword' => [
+    'auth/recuperar-contrasena' => [
         'controller' => 'AuthController',
-        'action' => 'showRecover',
-        'view' => 'auth/recoverPassword.php',
+        'action' => 'mostrarFormularioRecuperacionContrasena',
+        'view' => 'auth/recuperarContrasena.php',
         'layout' => 'main'
     ],
 
     // Registro de usuario
-    'auth/registration' => [
+    'auth/registro' => [
         'controller' => 'AuthController',
-        'action' => 'showRegister',
-        'view' => 'auth/registration.php',
+        'action' => 'mostrarFormularioRegistro',
+        'view' => 'auth/registro.php',
         'layout' => 'main'
     ],
     
-    'auth/process-login' => [
+    'auth/procesar-login' => [
         'controller' => 'AuthController',
-        'action' => 'processLogin',
+        'action' => 'procesarLogin',
         'view' => null,
         'layout' => null
     ],
     
-    'auth/process-registro' => [
+    'auth/procesar-registro' => [
         'controller' => 'AuthController',
-        'action' => 'processRegister',
+        'action' => 'procesarRegistro',
         'view' => null,
         'layout' => null
     ],
     
-    'auth/process-recuperar' => [
+    'auth/procesar-recuperar' => [
         'controller' => 'AuthController',
-        'action' => 'processRecover',
+        'action' => 'procesarRecuperacionContrasena',
         'view' => null,
         'layout' => null
     ],
     
     
-    'auth/logout' => [
+    'auth/cerrar-sesion' => [
         'controller' => 'AuthController',
-        'action' => 'logout',
+        'action' => 'cerrarSesion',
         'view' => null,
         'layout' => null
     ],
@@ -121,47 +121,49 @@ $routes = [
     
 
     // Gestión de Usuarios
-    'user/usuarios' => [
-        'controller' => 'UserController',
-        'action' => 'showUsers',
-        'view' => 'user/usuarios.php',
+    'admin/usuarios/usuarios' => [
+        'controller' => 'UsuarioController',
+        'action' => 'mostrarGestionUsuarios',
+        'view' => 'admin/usuarios/usuarios.php',
         'layout' => 'admin'
     ],
     
-    'user/new' => [
-        'controller' => 'UserController',
-        'action' => 'showCreateUser',
-        'view' => 'user/newUsuario.php',
+    'admin/usuarios/nuevo' => [
+        'controller' => 'UsuarioController',
+        'action' => 'mostrarFormularioCreacionUsuario',
+        'view' => 'admin/usuarios/crearUsuario.php',
         'layout' => 'admin'
     ],
     
-    'user/create' => [
-        'controller' => 'UserController',
-        'action' => 'createUser',
+    'admin/usuarios/crear' => [
+        'controller' => 'UsuarioController',
+        'action' => 'crearUsuario',
+        'view' => null,
+        'layout' => null
+    ],
+
+    'admin/usuarios/editar' => [
+        'controller' => 'UsuarioController',
+        'action' => 'mostrarFormularioActualizacionUsuario',
+        'view' => 'admin/usuarios/actualizarUsuario.php',
+        'layout' => 'admin'
+    ],
+    
+    'admin/usuarios/actualizar' => [
+        'controller' => 'UsuarioController',
+        'action' => 'procesarActualizacionUsuario',
         'view' => null,
         'layout' => null
     ],
     
-    'user/edit' => [
-        'controller' => 'UserController',
-        'action' => 'showEditUser',
-        'view' => 'user/updateUsuario.php',
-        'layout' => 'admin'
-    ],
-    
-    'user/update' => [
-        'controller' => 'UserController',
-        'action' => 'updateUser',
+    'admin/usuarios/eliminar' => [
+        'controller' => 'UsuarioController',
+        'action' => 'eliminarUsuario',
         'view' => null,
         'layout' => null
     ],
-    
-    'user/delete' => [
-        'controller' => 'UserController',
-        'action' => 'deleteUser',
-        'view' => null,
-        'layout' => null
-    ],
+
+    //Gestión de Propiedades
     
     'admin/propiedades' => [
         'controller' => 'AdminController',
