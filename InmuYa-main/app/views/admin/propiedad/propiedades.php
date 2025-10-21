@@ -286,49 +286,62 @@ include __DIR__ . '/../../layouts/admin.php';
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ JavaScript de propiedades cargado correctamente');
     
-    // Botones de acción
-    document.querySelectorAll('.btn-edit').forEach(button => {
-        button.addEventListener('click', function() {
-            const propertyId = this.dataset.propertyId;
-            // Redirigir a la página de edición
-            window.location.href = `<?php echo BASE_URL; ?>index.php?route=admin/propiedades/editar&id=${propertyId}`;
-        });
-    });
+    // Variable global para el proceso de eliminación
+    let currentPropertyId = null;
     
-    // Variables globales para el proceso de eliminación
-    let propertyToDelete = null;
-    let deleteButton = null;
-    
-    // Botones de eliminar
-    document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function() {
-            const propertyId = this.dataset.propertyId;
-            const propertyTitle = this.closest('tr').querySelector('.property-title').textContent;
-            
-            // Guardar referencia al botón y propiedad
-            propertyToDelete = propertyId;
-            deleteButton = this;
-            
-            // Mostrar mensaje de confirmación
-            document.getElementById('confirmationMessage').textContent = 
-                `¿Estás seguro de que quieres eliminar la propiedad "${propertyTitle}"? Esta acción no se puede deshacer.`;
-            document.getElementById('deleteConfirmation').style.display = 'block';
-            
-            // Scroll hacia arriba para mostrar el mensaje
-            document.getElementById('deleteConfirmation').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-        });
-    });
-    
-    // Botones de acción
-    // Event listeners para botones de editar
+    // Botones de editar
     document.querySelectorAll('.btn-icon.btn-edit').forEach(button => {
         button.addEventListener('click', function() {
             const propertyId = this.dataset.propertyId;
             window.location.href = `<?php echo BASE_URL; ?>index.php?route=admin/editar-propiedad&id=${propertyId}`;
         });
+    });
+    
+    // Botones de eliminar
+    document.querySelectorAll('.btn-icon.btn-delete').forEach(button => {
+        button.addEventListener('click', function() {
+            console.log('🚨 CLIC EN BOTÓN ELIMINAR DETECTADO');
+            const propertyId = this.dataset.propertyId;
+            console.log('🚨 Property ID:', propertyId);
+            
+            // Obtener el título de la propiedad
+            const propertyRow = this.closest('tr');
+            const titleElement = propertyRow.querySelector('.property-title-compact .title-line-1, .property-title-compact .title-single');
+            const propertyTitle = titleElement ? titleElement.textContent.trim() : 'Propiedad';
+            
+            console.log('🚨 Título de propiedad:', propertyTitle);
+            
+            // Guardar el ID de la propiedad a eliminar
+            currentPropertyId = propertyId;
+            
+            // Mostrar mensaje de confirmación
+            const confirmationMessage = document.getElementById('confirmationMessage');
+            const deleteConfirmation = document.getElementById('deleteConfirmation');
+            
+            if (confirmationMessage && deleteConfirmation) {
+                confirmationMessage.textContent = 
+                    `¿Estás seguro de que quieres eliminar la propiedad "${propertyTitle}"? Esta acción no se puede deshacer.`;
+                deleteConfirmation.style.display = 'block';
+                console.log('✅ Modal de confirmación mostrado');
+            } else {
+                console.error('❌ Elementos del modal no encontrados');
+            }
+        });
+    });
+    
+    // Confirmar eliminación
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        if (currentPropertyId) {
+            console.log('🚨 Confirmando eliminación de propiedad:', currentPropertyId);
+            window.location.href = `<?php echo BASE_URL; ?>index.php?route=admin/eliminar-propiedad&id=${currentPropertyId}`;
+        }
+    });
+    
+    // Cancelar eliminación
+    document.getElementById('cancelDelete').addEventListener('click', function() {
+        document.getElementById('deleteConfirmation').style.display = 'none';
+        currentPropertyId = null;
+        console.log('✅ Eliminación cancelada');
     });
     
     // Toggle destacado
@@ -360,10 +373,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 console.log('Response data:', data);
                 if (data.success) {
-                    // Opcional: mostrar notificación de éxito
                     console.log('Estado destacado actualizado');
                 } else {
-                    // Revertir el toggle si hay error
                     this.checked = !this.checked;
                     alert('Error al actualizar el estado destacado: ' + (data.error || 'Error desconocido'));
                 }
@@ -375,66 +386,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-    // Eliminación de propiedades
-    console.log('🔍 Configurando botones de eliminar...');
-    
-    // Test de todos los botones
-    const allButtons = document.querySelectorAll('button');
-    console.log('🔍 Todos los botones:', allButtons.length);
-    
-    const btnIconButtons = document.querySelectorAll('.btn-icon');
-    console.log('🔍 Botones con clase btn-icon:', btnIconButtons.length);
-    
-    const deleteButtons = document.querySelectorAll('.btn-delete');
-    console.log('🔍 Botones con clase btn-delete:', deleteButtons.length);
-    
-    // Test específico de botones de eliminar
-    const btnIconDeleteButtons = document.querySelectorAll('.btn-icon.btn-delete');
-    console.log('🔍 Botones con clases btn-icon btn-delete:', btnIconDeleteButtons.length);
-    
-    btnIconDeleteButtons.forEach((button, index) => {
-        console.log(`🔍 Botón ${index}:`, button);
-        console.log(`🔍 Botón ${index} data-property-id:`, button.dataset.propertyId);
-        
-        button.addEventListener('click', function() {
-            console.log('🚨 CLIC EN BOTÓN ELIMINAR DETECTADO');
-            console.log('🚨 currentPropertyId:', this.dataset.propertyId);
-            
-            currentPropertyId = this.dataset.propertyId;
-            const propertyTitle = this.closest('tr').querySelector('.property-title').textContent;
-            console.log('🚨 Título de propiedad:', propertyTitle);
-            
-            const confirmationMessage = document.getElementById('confirmationMessage');
-            const deleteConfirmation = document.getElementById('deleteConfirmation');
-            
-            console.log('🚨 confirmationMessage:', confirmationMessage);
-            console.log('🚨 deleteConfirmation:', deleteConfirmation);
-            
-            if (confirmationMessage && deleteConfirmation) {
-                confirmationMessage.textContent = 
-                    `¿Estás seguro de que quieres eliminar la propiedad "${propertyTitle}"? Esta acción no se puede deshacer.`;
-                deleteConfirmation.style.display = 'block';
-                console.log('✅ Modal mostrado');
-            } else {
-                console.error('❌ Elementos del modal no encontrados');
-            }
-        });
-    });
-    
-    // Confirmar eliminación
-    document.getElementById('confirmDelete').addEventListener('click', function() {
-        if (currentPropertyId) {
-            window.location.href = `<?php echo BASE_URL; ?>index.php?route=admin/eliminar-propiedad&id=${currentPropertyId}`;
-        }
-    });
-    
-    // Cancelar eliminación
-    document.getElementById('cancelDelete').addEventListener('click', function() {
-        document.getElementById('deleteConfirmation').style.display = 'none';
-        currentPropertyId = null;
-    });
-});
-</script>
     
     // Sistema de notificaciones
     function showNotification(message, type = 'info') {
