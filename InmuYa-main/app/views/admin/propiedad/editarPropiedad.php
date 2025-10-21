@@ -456,44 +456,49 @@ if (session_status() === PHP_SESSION_NONE) {
 <script>
 console.log('Script de editarPropiedad.php iniciado');
 
+// Función global para mostrar mensajes dinámicos
+function showMessage(message, type = 'info') {
+    const messageContainer = document.getElementById('messageContainer');
+    const messageDiv = document.createElement('div');
+    
+    let className, icon;
+    switch(type) {
+        case 'success':
+            className = 'mensaje-exito';
+            icon = 'fas fa-check-circle';
+            break;
+        case 'error':
+            className = 'mensaje-error';
+            icon = 'fas fa-exclamation-circle';
+            break;
+        case 'warning':
+            className = 'mensaje-warning';
+            icon = 'fas fa-exclamation-triangle';
+            break;
+        default:
+            className = 'mensaje-info';
+            icon = 'fas fa-info-circle';
+    }
+    
+    messageDiv.className = className;
+    messageDiv.innerHTML = `
+        <i class="${icon}"></i>
+        ${message}
+    `;
+    
+    messageContainer.insertBefore(messageDiv, messageContainer.firstChild);
+    messageDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    setTimeout(() => {
+        messageDiv.style.opacity = '0';
+        setTimeout(() => messageDiv.remove(), 300);
+    }, 5000);
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded ejecutado');
     
-    // Función para mostrar mensajes dinámicos
-    function showMessage(message, type = 'info') {
-        const messageContainer = document.getElementById('messageContainer');
-        const messageDiv = document.createElement('div');
-        
-        let className, icon;
-        switch(type) {
-            case 'success':
-                className = 'mensaje-exito';
-                icon = 'fas fa-check-circle';
-                break;
-            case 'error':
-                className = 'mensaje-error';
-                icon = 'fas fa-exclamation-circle';
-                break;
-            default:
-                className = 'mensaje-info';
-                icon = 'fas fa-info-circle';
-        }
-        
-        messageDiv.className = className;
-        messageDiv.innerHTML = `
-            <i class="${icon}"></i>
-            ${message}
-        `;
-        
-        messageContainer.insertBefore(messageDiv, messageContainer.firstChild);
-        messageDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        
-        setTimeout(() => {
-            messageDiv.style.opacity = '0';
-            setTimeout(() => messageDiv.remove(), 300);
-        }, 5000);
-    }
-
     // Validación y envío AJAX del formulario
     document.getElementById('editPropertyForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Prevenir envío normal del formulario
@@ -555,8 +560,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            
+            // Verificar si la respuesta es JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                // Si no es JSON, leer como texto para debug
+                return response.text().then(text => {
+                    console.log('Non-JSON response:', text);
+                    throw new Error('Respuesta del servidor no es JSON válido');
+                });
+            }
+        })
         .then(data => {
+            console.log('Response data:', data);
             if (data.success) {
                 // Mostrar mensaje de éxito y redirigir
                 showMessage(data.message, 'success');
@@ -566,11 +587,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.location.href = '<?php echo BASE_URL; ?>index.php?route=admin/propiedades';
                 }, 2000);
             } else {
-                showMessage(data.message, 'error');
+                showMessage(data.message || 'Error al actualizar la propiedad', 'error');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error completo:', error);
             showMessage('Error al actualizar la propiedad. Inténtalo de nuevo.', 'error');
         })
         .finally(() => {
