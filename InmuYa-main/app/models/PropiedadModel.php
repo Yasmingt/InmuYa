@@ -59,7 +59,7 @@ class PropiedadModel {
             $sql .= " AND p.destacado = ?";
         }
         
-        $sql .= " ORDER BY p.destacado DESC, p.fecha_publicacion DESC";
+        $sql .= " ORDER BY p.fecha_publicacion DESC";
         
         if ($limit) {
             $sql .= " LIMIT ? OFFSET ?";
@@ -151,8 +151,11 @@ class PropiedadModel {
         $sql = "INSERT INTO propiedades (
             titulo, descripcion, tipo, precio, area, habitaciones, banos, parqueadero,
             direccion, id_ciudad, id_barrio, id_usuario, estado, tipo_propiedad,
-            destacado, precio_negociable, activo
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            destacado, piso, ascensor, balcon, terraza, jardin, piscina, gimnasio,
+            seguridad_24h, mascotas_permitidas, precio_negociable, incluye_administracion,
+            valor_administracion, incluye_servicios, telefono_contacto, email_contacto,
+            nombre_contacto, mostrar_telefono, mostrar_email
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $this->conexion->prepare($sql);
         
@@ -160,7 +163,7 @@ class PropiedadModel {
             throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
         }
         
-        $stmt->bind_param("sssddiiisiiisssii", 
+        $stmt->bind_param("sssddiiisiiissssiiiiiiiiiiisssiii", 
             $data['titulo'],
             $data['descripcion'],
             $data['tipo'],
@@ -173,11 +176,27 @@ class PropiedadModel {
             $data['id_ciudad'],
             $data['id_barrio'],
             $data['id_usuario'],
-            $data['estado'] ?? 'disponible',
+            $data['estado'],
             $data['tipo_propiedad'],
-            $data['destacado'] ?? 0,
-            $data['precio_negociable'] ?? 1,
-            $data['activo'] ?? 1
+            $data['destacado'],
+            $data['piso'],
+            $data['ascensor'],
+            $data['balcon'],
+            $data['terraza'],
+            $data['jardin'],
+            $data['piscina'],
+            $data['gimnasio'],
+            $data['seguridad_24h'],
+            $data['mascotas_permitidas'],
+            $data['precio_negociable'],
+            $data['incluye_administracion'],
+            $data['valor_administracion'],
+            $data['incluye_servicios'],
+            $data['telefono_contacto'],
+            $data['email_contacto'],
+            $data['nombre_contacto'],
+            $data['mostrar_telefono'],
+            $data['mostrar_email']
         );
         
         $result = $stmt->execute();
@@ -191,11 +210,20 @@ class PropiedadModel {
     
     /** Actualizar propiedad */
     public function actualizarPropiedad($id, $data) {
+        // Debug: Log datos recibidos en el modelo
+        error_log("PropiedadModel::actualizarPropiedad - ID: " . $id);
+        error_log("PropiedadModel::actualizarPropiedad - Datos recibidos: " . print_r($data, true));
+        error_log("PropiedadModel::actualizarPropiedad - Estado en datos: " . ($data['estado'] ?? 'NO DEFINIDO'));
+        
         $sql = "UPDATE propiedades SET 
             titulo = ?, descripcion = ?, tipo = ?, precio = ?, area = ?, 
             habitaciones = ?, banos = ?, parqueadero = ?, direccion = ?, 
             id_ciudad = ?, id_barrio = ?, estado = ?, tipo_propiedad = ?, 
-            destacado = ?, precio_negociable = ?
+            destacado = ?, piso = ?, ascensor = ?, balcon = ?, 
+            terraza = ?, jardin = ?, piscina = ?, gimnasio = ?, seguridad_24h = ?, 
+            mascotas_permitidas = ?, precio_negociable = ?, incluye_administracion = ?, 
+            valor_administracion = ?, incluye_servicios = ?, telefono_contacto = ?, 
+            email_contacto = ?, nombre_contacto = ?, mostrar_telefono = ?, mostrar_email = ?
             WHERE id_propiedad = ?";
         
         $stmt = $this->conexion->prepare($sql);
@@ -204,7 +232,7 @@ class PropiedadModel {
             throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
         }
         
-        $stmt->bind_param("sssddiiisiiisii", 
+        $stmt->bind_param("sssddiiisiiissssiiiiiiiiiiisssiii", 
             $data['titulo'],
             $data['descripcion'],
             $data['tipo'],
@@ -219,11 +247,34 @@ class PropiedadModel {
             $data['estado'],
             $data['tipo_propiedad'],
             $data['destacado'],
+            $data['piso'],
+            $data['ascensor'],
+            $data['balcon'],
+            $data['terraza'],
+            $data['jardin'],
+            $data['piscina'],
+            $data['gimnasio'],
+            $data['seguridad_24h'],
+            $data['mascotas_permitidas'],
             $data['precio_negociable'],
+            $data['incluye_administracion'],
+            $data['valor_administracion'],
+            $data['incluye_servicios'],
+            $data['telefono_contacto'],
+            $data['email_contacto'],
+            $data['nombre_contacto'],
+            $data['mostrar_telefono'],
+            $data['mostrar_email'],
             $id
         );
         
-        return $stmt->execute();
+        $result = $stmt->execute();
+        
+        if (!$result) {
+            throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+        }
+        
+        return $result;
     }
     
     /** Eliminar propiedad */
@@ -240,38 +291,45 @@ class PropiedadModel {
         return $stmt->execute();
     }
     
-    /**Cambiar estado de propiedad */
-    public function cambiarEstadoPropiedad($id, $estado) {
-        $estadosValidos = ['disponible', 'vendido', 'arrendado', 'reservado', 'inactivo'];
-        
-        if (!in_array($estado, $estadosValidos)) {
-            throw new Exception("Estado no válido");
-        }
-        
-        $sql = "UPDATE propiedades SET estado = ? WHERE id_propiedad = ?";
-        $stmt = $this->conexion->prepare($sql);
-        
-        if (!$stmt) {
-            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
-        }
-        
-        $stmt->bind_param("si", $estado, $id);
-        
-        return $stmt->execute();
-    }
-    
     /** Marcar/desmarcar propiedad como destacada */
-    public function toggleDestacado($id) {
-        $sql = "UPDATE propiedades SET destacado = NOT destacado WHERE id_propiedad = ?";
-        $stmt = $this->conexion->prepare($sql);
+    public function toggleDestacado($id, $destacado = null) {
+        error_log("PropiedadModel::toggleDestacado called with ID: $id, destacado: " . ($destacado ?? 'null'));
         
-        if (!$stmt) {
-            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+        if ($destacado !== null) {
+            // Valor específico proporcionado
+            $sql = "UPDATE propiedades SET destacado = ? WHERE id_propiedad = ?";
+            error_log("SQL: $sql with params: $destacado, $id");
+            $stmt = $this->conexion->prepare($sql);
+            
+            if (!$stmt) {
+                error_log("Error preparing statement: " . $this->conexion->error);
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+            }
+            
+            $stmt->bind_param("ii", $destacado, $id);
+        } else {
+            // Toggle automático (comportamiento original)
+            $sql = "UPDATE propiedades SET destacado = NOT destacado WHERE id_propiedad = ?";
+            error_log("SQL: $sql with param: $id");
+            $stmt = $this->conexion->prepare($sql);
+            
+            if (!$stmt) {
+                error_log("Error preparing statement: " . $this->conexion->error);
+                throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+            }
+            
+            $stmt->bind_param("i", $id);
         }
         
-        $stmt->bind_param("i", $id);
+        $result = $stmt->execute();
+        error_log("Execute result: " . ($result ? 'true' : 'false'));
         
-        return $stmt->execute();
+        if (!$result) {
+            error_log("Execute error: " . $stmt->error);
+            throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+        }
+        
+        return $result;
     }
     
     /** Obtener propiedades destacadas */
@@ -329,6 +387,48 @@ class PropiedadModel {
         $stats['featured'] = $result->fetch_assoc()['count'];
         
         return $stats;
+    }
+    
+    /**
+     * Obtener todas las ciudades
+     */
+    public function obtenerCiudades() {
+        $sql = "SELECT id_ciudad, nombre FROM ciudades ORDER BY nombre ASC";
+        $result = $this->conexion->query($sql);
+        
+        if (!$result) {
+            throw new Exception("Error al obtener ciudades: " . $this->conexion->error);
+        }
+        
+        $ciudades = [];
+        while ($row = $result->fetch_assoc()) {
+            $ciudades[] = $row;
+        }
+        
+        return $ciudades;
+    }
+    
+    /**
+     * Obtener barrios por ciudad
+     */
+    public function obtenerBarriosPorCiudad($id_ciudad) {
+        $sql = "SELECT id_barrio, nombre FROM barrios WHERE id_ciudad = ? ORDER BY nombre ASC";
+        $stmt = $this->conexion->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Error en la preparación de la consulta: " . $this->conexion->error);
+        }
+        
+        $stmt->bind_param("i", $id_ciudad);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $barrios = [];
+        while ($row = $result->fetch_assoc()) {
+            $barrios[] = $row;
+        }
+        
+        return $barrios;
     }
 }
 ?>

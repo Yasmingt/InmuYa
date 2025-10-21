@@ -28,29 +28,13 @@ if (!defined('BASE_URL')) {
 
 // Definir rutas del sistema
 $routes = [
-    // Página principal
-   /* 'home' => [
-        'controller' => 'HomeController',
-        'action' => 'index',
-        'view' => 'home/index.php',
-        'layout' => 'index'
-    ],*/
-    
+
     // Propiedades Públicas
     'home' => [
         'controller' => 'PropiedadController',
         'action' => 'index',
         'view' => 'home/index.php',
         'layout' => 'index'
-    ],
-    
-
-    
-    'buscar-propiedades' => [
-        'controller' => 'PropertyController',
-        'action' => 'buscar',
-        'view' => 'public/buscarPropiedades.php',
-        'layout' => 'public'
     ],
     
     // Autenticación
@@ -97,7 +81,6 @@ $routes = [
         'view' => null,
         'layout' => null
     ],
-    
     
     'auth/cerrar-sesion' => [
         'controller' => 'AuthController',
@@ -163,34 +146,27 @@ $routes = [
     'admin/propiedades' => [
         'controller' => 'PropiedadController',
         'action' => 'adminPropiedades',
-        'view' => 'admin/property/propiedades.php',
+        'view' => 'admin/propiedad/propiedades.php',
         'layout' => 'admin'
     ],
     
     'admin/crear-propiedad' => [
         'controller' => 'PropiedadController',
         'action' => 'crearPropiedad',
-        'view' => 'admin/property/crearPropiedad.php',
+        'view' => 'admin/propiedad/crearPropiedad.php',
         'layout' => 'admin'
     ],
     
     'admin/editar-propiedad' => [
         'controller' => 'PropiedadController',
         'action' => 'editarPropiedad',
-        'view' => 'admin/property/editarPropiedad.php',
+        'view' => 'admin/propiedad/editarPropiedad.php',
         'layout' => 'admin'
     ],
     
     'admin/eliminar-propiedad' => [
         'controller' => 'PropiedadController',
         'action' => 'eliminarPropiedad',
-        'view' => null,
-        'layout' => null
-    ],
-    
-    'admin/cambiar-estado-propiedad' => [
-        'controller' => 'PropiedadController',
-        'action' => 'cambiarEstadoPropiedad',
         'view' => null,
         'layout' => null
     ],
@@ -206,7 +182,7 @@ $routes = [
     'admin/gestionar-imagenes' => [
         'controller' => 'ImageController',
         'action' => 'gestionarImagenes',
-        'view' => 'property/gestionarImagenes.php',
+        'view' => 'admin/propiedad/gestionarImagenes.php',
         'layout' => 'admin'
     ],
     
@@ -220,6 +196,13 @@ $routes = [
     'admin/eliminar-imagen' => [
         'controller' => 'ImageController',
         'action' => 'eliminarImagen',
+        'view' => null,
+        'layout' => null
+    ],
+    
+    'admin/guardar-imagenes' => [
+        'controller' => 'ImageController',
+        'action' => 'guardarImagenes',
         'view' => null,
         'layout' => null
     ],
@@ -248,8 +231,15 @@ $routes = [
     'admin/vista-previa-imagen' => [
         'controller' => 'ImageController',
         'action' => 'vistaPrevia',
-        'view' => 'property/vistaPreviaImagen.php',
+        'view' => 'admin/propiedad/vistaPreviaImagen.php',
         'layout' => 'admin'
+    ],
+    
+    'admin/obtener-barrios' => [
+        'controller' => 'PropiedadController',
+        'action' => 'obtenerBarriosPorCiudad',
+        'view' => null,
+        'layout' => null
     ],
 
     // Gestión de Contactos

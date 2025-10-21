@@ -54,7 +54,7 @@ class ImageController {
         $imagenes = $this->imageModel->getImagesByProperty($propertyId);
         
         // Incluir la vista
-        include __DIR__ . '/../views/property/gestionarImagenes.php';
+        include __DIR__ . '/../views/admin/propiedad/gestionarImagenes.php';
     }
     
     /**
@@ -107,15 +107,28 @@ class ImageController {
      */
     public function eliminarImagen($imageId) {
         try {
+            // Verificar que sea una petición AJAX
+            if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']) || $_SERVER['HTTP_X_REQUESTED_WITH'] !== 'XMLHttpRequest') {
+                throw new Exception('Petición no válida');
+            }
+            
             $this->imageModel->deleteImage($imageId);
-            $_SESSION['success_message'] = 'Imagen eliminada exitosamente';
+            
+            $response = [
+                'success' => true,
+                'message' => 'Imagen eliminada exitosamente'
+            ];
+            
         } catch (Exception $e) {
-            $_SESSION['error_message'] = 'Error al eliminar imagen: ' . $e->getMessage();
+            $response = [
+                'success' => false,
+                'error' => 'Error al eliminar imagen: ' . $e->getMessage()
+            ];
         }
         
-        // Redirigir de vuelta a la gestión de imágenes
-        $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL . 'admin/propiedades';
-        header('Location: ' . $referer);
+        // Enviar respuesta JSON
+        header('Content-Type: application/json');
+        echo json_encode($response);
         exit;
     }
     
@@ -200,6 +213,81 @@ class ImageController {
     }
     
     /**
+     * Guardar imágenes nuevas para una propiedad
+     */
+    public function guardarImagenes() {
+        try {
+            // Verificar que sea una petición POST
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new Exception('Método no permitido');
+            }
+            
+            // Verificar que hay imágenes
+            if (!isset($_FILES['imagenes']) || empty($_FILES['imagenes']['name'][0])) {
+                throw new Exception('No se han seleccionado imágenes');
+            }
+            
+            // Obtener ID de la propiedad
+            $propiedadId = $_POST['propiedad_id'] ?? null;
+            if (!$propiedadId) {
+                throw new Exception('ID de propiedad no especificado');
+            }
+            
+            // Procesar imágenes
+            $imagenesGuardadas = 0;
+            $errores = [];
+            
+            foreach ($_FILES['imagenes']['name'] as $index => $filename) {
+                if (empty($filename)) continue;
+                
+                $fileData = [
+                    'name' => $_FILES['imagenes']['name'][$index],
+                    'type' => $_FILES['imagenes']['type'][$index],
+                    'tmp_name' => $_FILES['imagenes']['tmp_name'][$index],
+                    'error' => $_FILES['imagenes']['error'][$index],
+                    'size' => $_FILES['imagenes']['size'][$index]
+                ];
+                
+                try {
+                    // Subir imagen
+                    $resultado = $this->imageModel->uploadImages([$fileData], $propiedadId);
+                    if ($resultado['success']) {
+                        $imagenesGuardadas++;
+                    } else {
+                        $errores[] = $resultado['error'];
+                    }
+                } catch (Exception $e) {
+                    $errores[] = $e->getMessage();
+                }
+            }
+            
+            // Preparar respuesta
+            $response = [
+                'success' => $imagenesGuardadas > 0,
+                'count' => $imagenesGuardadas,
+                'errors' => $errores
+            ];
+            
+            if (!empty($errores)) {
+                $response['error'] = implode(', ', $errores);
+            }
+            
+            // Enviar respuesta JSON
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            
+        } catch (Exception $e) {
+            $response = [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+            
+            header('Content-Type: application/json');
+            echo json_encode($response);
+        }
+    }
+    
+    /**
      * Vista previa de imagen
      */
     public function vistaPrevia($imageId) {
@@ -211,7 +299,7 @@ class ImageController {
             }
             
             // Incluir vista de previsualización
-            include __DIR__ . '/../views/property/vistaPreviaImagen.php';
+            include __DIR__ . '/../views/admin/propiedad/vistaPreviaImagen.php';
             
         } catch (Exception $e) {
             $_SESSION['error_message'] = 'Error al mostrar imagen: ' . $e->getMessage();

@@ -145,9 +145,9 @@ include __DIR__ . '/../layouts/index.php';
                     <?php else: ?>
                         <div class="no-properties">
                             <p>No hay propiedades destacadas disponibles en este momento.</p>
-                            <a href="<?php echo BASE_URL; ?>propiedades" class="btn btn-principal">
-                                <i class="fas fa-home"></i>
-                                Ver Todas las Propiedades
+                            <a href="<?php echo BASE_URL; ?>auth/login" class="btn btn-principal">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Iniciar Sesión para Ver Propiedades
                             </a>
                         </div>
                     <?php endif; ?>
