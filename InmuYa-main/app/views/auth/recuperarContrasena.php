@@ -44,7 +44,7 @@ $description = 'Recupera tu contraseña de InmuYa';
                 </div>
             <?php endif; ?>
 
-            <form action="<?php echo BASE_URL; ?>auth/process-recuperar" method="post">
+            <form action="<?php echo BASE_URL; ?>auth/procesar-recuperar" method="post">
                 <div class="grupo-formulario">
                     <label for="email">Correo Electrónico</label>
                     <input type="email" id="email" name="email" placeholder="tu.correo@ejemplo.com" required>

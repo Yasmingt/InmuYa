@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('confirmDelete').addEventListener('click', function() {
         if (contactToDelete && deleteButton) {
             // Enviar petición AJAX
-            fetch('<?php echo BASE_URL; ?>index.php?route=contact/delete', {
+            fetch('<?php echo BASE_URL; ?>index.php?route=admin/contactos/eliminar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

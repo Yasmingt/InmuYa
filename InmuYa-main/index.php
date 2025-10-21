@@ -37,6 +37,8 @@ try {
                     $controller = new $controllerName();
                     
                     if (method_exists($controller, $actionName)) {
+                        // Limpiar buffer antes de ejecutar controlador (para permitir redirecciones)
+                        ob_end_clean();
                         $controller->$actionName();
                     } else {
                         http_response_code(404);

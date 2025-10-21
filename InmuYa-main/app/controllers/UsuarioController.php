@@ -60,7 +60,7 @@ class UsuarioController {
         $pageTitle = 'Crear Nuevo Usuario';
         
         // Incluir la vista
-        include __DIR__ . '/../views/admin/usuarios/actualizarUsuario.php';
+        include __DIR__ . '/../views/admin/usuarios/crearUsuario.php';
     }
     
     /** Mostrar formulario de actualización de usuario*/
@@ -138,7 +138,7 @@ class UsuarioController {
             if (empty($errors)) {
                 try {
                     // Actualizar usuario
-                    $result = $this->userModel->updateUser($user_id, [
+                    $result = $this->usuarioModel->actualizarUsuario($user_id, [
                         'nombre' => $nombre,
                         'email' => $email,
                         'telefono' => $telefono,
@@ -148,7 +148,7 @@ class UsuarioController {
                         'tipo_usuario' => $tipo_usuario
                     ]);
                     
-                    header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios&success=1');
+                    header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios&success=updated');
                     exit;
                 } catch (Exception $e) {
                     $errors[] = 'Error al actualizar el usuario: ' . $e->getMessage();
@@ -232,7 +232,7 @@ class UsuarioController {
                     $result = $this->usuarioModel->crearUsuario($data);
                     
                     if ($result) {
-                        header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios&success=1');
+                        header('Location: ' . BASE_URL . 'index.php?route=admin/usuarios/usuarios&success=created');
                         exit;
                     } else {
                         $errors[] = 'Error al crear el usuario. Inténtalo de nuevo.';
@@ -249,9 +249,9 @@ class UsuarioController {
             $description = 'Crear nuevo usuario';
             $pageTitle = 'Nuevo Usuario';
             
-            include __DIR__ . '/../views/admin/usuarios/actualizarUsuario.php';
+            include __DIR__ . '/../views/admin/usuarios/crearUsuario.php';
         } else {
-            $this->showUsers();
+            $this->mostrarGestionUsuarios();
         }
     }
     

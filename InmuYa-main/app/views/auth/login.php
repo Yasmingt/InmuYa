@@ -70,11 +70,11 @@ $description = 'Inicia sesión en tu cuenta de InmuYa';
             </form>
 
                 <div class="enlaces-login">
-                    <a href="<?php echo BASE_URL; ?>index.php?route=auth/recoverPassword">
+                    <a href="<?php echo BASE_URL; ?>index.php?route=auth/recuperar-contrasena">
                         <i class="fas fa-key"></i> ¿Olvidaste tu contraseña?
                     </a>
                     
-                    <a href="<?php echo BASE_URL; ?>index.php?route=auth/registration">
+                    <a href="<?php echo BASE_URL; ?>index.php?route=auth/registro">
                         <i class="fas fa-user-plus"></i> ¿No tienes cuenta? Regístrate aquí
                     </a>
                 </div>

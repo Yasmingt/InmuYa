@@ -29,30 +29,25 @@ if (!defined('BASE_URL')) {
 // Definir rutas del sistema
 $routes = [
     // Página principal
-    'home' => [
+   /* 'home' => [
         'controller' => 'HomeController',
+        'action' => 'index',
+        'view' => 'home/index.php',
+        'layout' => 'index'
+    ],*/
+    
+    // Propiedades Públicas
+    'home' => [
+        'controller' => 'PropiedadController',
         'action' => 'index',
         'view' => 'home/index.php',
         'layout' => 'index'
     ],
     
-    // Propiedades Públicas
-    'propiedades' => [
-        'controller' => 'PublicPropertyController',
-        'action' => 'index',
-        'view' => 'public/propiedades.php',
-        'layout' => 'public'
-    ],
-    
-    'propiedad' => [
-        'controller' => 'PublicPropertyController',
-        'action' => 'verPropiedad',
-        'view' => 'public/detallePropiedad.php',
-        'layout' => 'public'
-    ],
+
     
     'buscar-propiedades' => [
-        'controller' => 'PublicPropertyController',
+        'controller' => 'PropertyController',
         'action' => 'buscar',
         'view' => 'public/buscarPropiedades.php',
         'layout' => 'public'
@@ -166,42 +161,42 @@ $routes = [
     //Gestión de Propiedades
     
     'admin/propiedades' => [
-        'controller' => 'AdminController',
-        'action' => 'propiedades',
-        'view' => 'property/propiedades.php',
+        'controller' => 'PropiedadController',
+        'action' => 'adminPropiedades',
+        'view' => 'admin/property/propiedades.php',
         'layout' => 'admin'
     ],
     
     'admin/crear-propiedad' => [
-        'controller' => 'AdminController',
+        'controller' => 'PropiedadController',
         'action' => 'crearPropiedad',
-        'view' => 'property/crearPropiedad.php',
+        'view' => 'admin/property/crearPropiedad.php',
         'layout' => 'admin'
     ],
     
     'admin/editar-propiedad' => [
-        'controller' => 'AdminController',
+        'controller' => 'PropiedadController',
         'action' => 'editarPropiedad',
-        'view' => 'property/editarPropiedad.php',
+        'view' => 'admin/property/editarPropiedad.php',
         'layout' => 'admin'
     ],
     
     'admin/eliminar-propiedad' => [
-        'controller' => 'AdminController',
+        'controller' => 'PropiedadController',
         'action' => 'eliminarPropiedad',
         'view' => null,
         'layout' => null
     ],
     
     'admin/cambiar-estado-propiedad' => [
-        'controller' => 'AdminController',
+        'controller' => 'PropiedadController',
         'action' => 'cambiarEstadoPropiedad',
         'view' => null,
         'layout' => null
     ],
     
     'admin/toggle-destacado' => [
-        'controller' => 'AdminController',
+        'controller' => 'PropiedadController',
         'action' => 'toggleDestacado',
         'view' => null,
         'layout' => null
@@ -256,34 +251,36 @@ $routes = [
         'view' => 'property/vistaPreviaImagen.php',
         'layout' => 'admin'
     ],
-    
+
+    // Gestión de Contactos
     'admin/contactos' => [
         'controller' => 'AdminController',
         'action' => 'contactos',
-        'view' => 'admin/contactos.php',
+        'view' => 'admin/contactos/contactos.php',
         'layout' => 'admin'
     ],
     
     'contact/change-status' => [
-        'controller' => 'ContactActionController',
-        'action' => 'changeStatus',
+        'controller' => 'ContactoController',
+        'action' => 'cambiarEstado',
         'view' => null,
         'layout' => null
     ],
     
-    'contact/delete' => [
-        'controller' => 'ContactActionController',
-        'action' => 'deleteContact',
+    'admin/contactos/eliminar' => [
+        'controller' => 'ContactoController',
+        'action' => 'eliminarContacto',
         'view' => null,
         'layout' => null
     ],
         
-    'contact/process' => [
-        'controller' => 'ContactController',
-        'action' => 'processContact',
+    'contactar-propiedad' => [
+        'controller' => 'ContactoController',
+        'action' => 'procesarFormularioContacto',
         'view' => null,
         'layout' => null
     ],
+    
     
 ];
 

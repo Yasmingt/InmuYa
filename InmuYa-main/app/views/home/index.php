@@ -218,7 +218,7 @@ include __DIR__ . '/../layouts/index.php';
                 </div>
             </div>
             
-            <form class="formulario-contacto" action="<?php echo BASE_URL; ?>contact/process" method="POST" role="form">
+            <form class="formulario-contacto" action="<?php echo BASE_URL; ?>contactar-propiedad" method="POST" role="form">
                 <?php if (isset($_GET['contact_error'])): ?>
                     <div class="mensaje-error">
                         <i class="fas fa-exclamation-circle"></i>

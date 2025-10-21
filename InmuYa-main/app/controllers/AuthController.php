@@ -20,6 +20,11 @@ class AuthController {
         $title = 'Iniciar Sesión - InmuYa';
         $description = 'Inicia sesión en tu cuenta de InmuYa';
         
+        // Verificar si hay un mensaje de éxito en la URL
+        if (isset($_GET['success']) && empty($success)) {
+            $success = $_GET['success'];
+        }
+        
         // Incluir la vista de login
         include __DIR__ . '/../views/auth/login.php';
     }
@@ -119,7 +124,7 @@ class AuthController {
                 $data['contrasena'] = password_hash($data['contrasena'], PASSWORD_DEFAULT);
                 // Crear usuario
                 if ($this->usuarioModel->crearUsuario($data)) {
-                    header('Location: ' . BASE_URL . 'index.php?route=auth/login&success=1');
+                    header('Location: ' . BASE_URL . 'index.php?route=auth/login&success=Cuenta creada exitosamente. Ya puedes iniciar sesión.');
                     exit;
                 } else {
                     $error = 'Error al crear la cuenta. Inténtalo de nuevo.';

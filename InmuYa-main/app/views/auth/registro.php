@@ -33,14 +33,21 @@ $description = 'Crea tu cuenta en InmuYa y comienza a buscar tu hogar ideal';
                 Crea tu cuenta y comienza a buscar tu hogar ideal
             </p>
 
-            <?php if (!empty($mensaje)): ?>
+            <?php if (!empty($error)): ?>
                 <div class="mensaje-error">
                     <i class="fas fa-exclamation-circle"></i>
-                    <?php echo htmlspecialchars($mensaje); ?>
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (!empty($success)): ?>
+                <div class="mensaje-exito">
+                    <i class="fas fa-check-circle"></i>
+                    <?php echo htmlspecialchars($success); ?>
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="<?php echo BASE_URL; ?>index.php?route=auth/process-registro">
+            <form method="post" action="<?php echo BASE_URL; ?>index.php?route=auth/procesar-registro">
                 <!-- Información personal -->
                 <div class="grupo-formulario">
                     <label for="nombre">Nombre completo *</label>

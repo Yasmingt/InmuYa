@@ -31,7 +31,7 @@
             </div>
             
             <div class="contenido-hero">
-                <h1>Tu hogar perfecto te está esperando</h1>
+                <h1>Busca tu hogar a un clic de distancia</h1>
                 <p>Conectamos propietarios y arrendatarios de manera fácil, segura y confiable. Encuentra la propiedad de tus sueños o arrienda la tuya con total tranquilidad.</p>
             </div>
         </div>

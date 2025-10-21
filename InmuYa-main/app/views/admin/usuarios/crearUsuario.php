@@ -38,7 +38,7 @@ $currentPage = 'usuarios';
             <p class="section-subtitle">Agregar un nuevo usuario al sistema</p>
         </div>
         <div class="card-actions">
-            <a href="<?php echo BASE_URL; ?>index.php?route=admin/user/usuarios" class="btn btn-secondary">
+            <a href="<?php echo BASE_URL; ?>index.php?route=admin/usuarios/usuarios" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i>
                 Volver a Usuarios
             </a>
@@ -66,7 +66,7 @@ $currentPage = 'usuarios';
 
     <!-- Formulario de creación -->
     <div class="form-section">
-        <form method="POST" action="<?php echo BASE_URL; ?>index.php?route=admin/user/create" id="createUserForm" class="user-form">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?route=admin/usuarios/crear" id="createUserForm" class="user-form">
             <div class="form-grid">
                 <!-- Información Personal -->
                 <div class="form-group">

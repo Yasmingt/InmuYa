@@ -158,7 +158,7 @@ include __DIR__ . '/../layouts/admin.php';
     </div>
     
     <div class="form-body">
-        <form method="POST" action="<?php echo BASE_URL; ?>admin/crear-propiedad">
+        <form method="POST" action="<?php echo BASE_URL; ?>index.php?route=admin/crear-propiedad">
             <!-- Información básica -->
             <div class="form-row">
                 <div class="form-group">

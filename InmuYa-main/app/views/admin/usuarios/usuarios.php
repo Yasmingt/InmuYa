@@ -25,7 +25,7 @@ include __DIR__ . '/../../layouts/admin.php';
             <p>Administra todos los usuarios del sistema</p>
         </div>
         <div class="header-right">
-            <a href="<?php echo BASE_URL; ?>index.php?route=user/new" class="btn btn-primary">
+            <a href="<?php echo BASE_URL; ?>index.php?route=admin/usuarios/nuevo" class="btn btn-primary">
                 <i class="fas fa-plus"></i>
                 Nuevo Usuario
             </a>
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const userId = this.dataset.userId;
             // Redirigir a la página de edición
-            window.location.href = `<?php echo BASE_URL; ?>index.php?route=user/edit&id=${userId}`;
+            window.location.href = `<?php echo BASE_URL; ?>index.php?route=admin/usuarios/editar&id=${userId}`;
         });
     });
     
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('confirmDelete').addEventListener('click', function() {
         if (userToDelete && deleteButton) {
             // Petición AJAX para eliminar el usuario
-            fetch('<?php echo BASE_URL; ?>index.php?route=user/delete', {
+            fetch('<?php echo BASE_URL; ?>index.php?route=admin/usuarios/eliminar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -257,7 +257,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Mostrar notificación de éxito si viene de una actualización
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === '1') {
+    if (urlParams.get('success') === 'created') {
+        showNotification('Usuario creado correctamente', 'success');
+    } else if (urlParams.get('success') === 'updated') {
         showNotification('Usuario actualizado correctamente', 'success');
     }
     

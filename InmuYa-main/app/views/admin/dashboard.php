@@ -126,7 +126,7 @@ include __DIR__ . '/../layouts/admin.php';
                         <p>Crear un nuevo usuario</p>
                     </div>
                 </a>
-                <a href="<?php echo BASE_URL; ?>index.php?route=admin/propiedades" class="quick-action-item">
+                <a href="<?php echo BASE_URL; ?>index.php?route=admin/crear-propiedad" class="quick-action-item">
                     <div class="quick-action-icon">
                         <i class="fas fa-home"></i>
                     </div>
