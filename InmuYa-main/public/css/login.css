@@ -31,7 +31,7 @@ body, html {
 /* Imagen a la izquierda */
 .login-imagen {
     flex: 3;
-    background-image: url('../img/header.jpg');
+    background-image: var(--img-header);
     background-size: cover;
     background-position: center;
     position: relative;

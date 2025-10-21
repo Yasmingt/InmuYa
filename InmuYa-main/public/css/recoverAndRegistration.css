@@ -44,7 +44,7 @@ input[type="date"]:invalid {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('../img/header.jpg') center/cover no-repeat;
+    background: var(--img-header) center/cover no-repeat;
     min-height: 100vh;
     padding: 2rem 1rem;
     line-height: 1.6;

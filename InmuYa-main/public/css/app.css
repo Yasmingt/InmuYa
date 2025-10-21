@@ -34,7 +34,7 @@ body {
 
 /* Navegación */
 .header.inicio {
-    background-image: url('../img/header.jpg');
+    background-image: var(--img-header);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -713,7 +713,7 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('../img/header.jpg') center/cover;
+    background: var(--img-header) center/cover;
     opacity: 0.1;
     z-index: 0;
 }

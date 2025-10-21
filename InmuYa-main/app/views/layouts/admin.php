@@ -16,14 +16,15 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title ?? 'Panel de Admin - InmuYa'; ?></title>
     <meta name="description" content="<?php echo $description ?? 'Panel de administración de InmuYa'; ?>">
-    <link rel="icon" type="image/jpeg" href="<?php echo BASE_URL; ?>public/img/logo.jpeg">
+    <link rel="icon" type="image/jpeg" href="<?php echo IMG_URL; ?>logo.jpeg">
     
     <!-- CSS específico para admin -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/admin.css">
+    <link rel="stylesheet" href="<?php echo CSS_URL; ?>config.php">
+    <link rel="stylesheet" href="<?php echo CSS_URL; ?>admin.css">
     
     <!-- CSS específico por página -->
     <?php if (isset($currentPage)): ?>
-        <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/<?php echo $currentPage; ?>.css">
+        <link rel="stylesheet" href="<?php echo CSS_URL; ?><?php echo $currentPage; ?>.css">
     <?php endif; ?>
     
     <!-- Font Awesome para iconos -->
@@ -33,7 +34,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <header class="header admin-header">
         <div class="barra">
             <div class="header-logo-panel">
-                <img src="<?php echo BASE_URL; ?>public/img/logo.jpeg" alt="Logo InmuYa">
+                <img src="<?php echo IMG_URL; ?>logo.jpeg" alt="Logo InmuYa">
                 <span>Panel Admin</span>
             </div>
             <div class="header-menu">

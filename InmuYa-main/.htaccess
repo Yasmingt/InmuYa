@@ -1,20 +1,15 @@
+# Configuración para archivos CSS dinámicos
+<Files "config.php">
+    Header set Content-Type "text/css"
+</Files>
+
+# Configuración general para el proyecto
 RewriteEngine On
 
-# Redirigir todas las solicitudes a index.php con el parámetro route
+# Redirigir a index.php si no existe el archivo
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
-
-# Configuración de seguridad
-<Files "config.php">
-    Order Allow,Deny
-    Deny from all
-</Files>
-
-<Files "conexion.php">
-    Order Allow,Deny
-    Deny from all
-</Files>
+RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Configuración de caché para archivos estáticos
 <IfModule mod_expires.c>
@@ -28,7 +23,7 @@ RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
     ExpiresByType image/svg+xml "access plus 1 month"
 </IfModule>
 
-# Configuración de compresión
+# Compresión GZIP
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
@@ -39,11 +34,4 @@ RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
     AddOutputFilterByType DEFLATE application/rss+xml
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/x-javascript
-</IfModule>
-
-# Configuración de headers de seguridad
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options nosniff
-    Header always set X-Frame-Options DENY
-    Header always set X-XSS-Protection "1; mode=block"
 </IfModule>

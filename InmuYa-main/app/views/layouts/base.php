@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title ?? 'InmuYa'; ?></title>
     <meta name="description" content="<?php echo $description ?? 'Plataforma inmobiliaria'; ?>">
-    <link rel="icon" type="image/jpeg" href="<?php echo BASE_URL; ?>public/img/logo.jpeg">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>public/css/app.css">
+    <link rel="icon" type="image/jpeg" href="<?php echo IMG_URL; ?>logo.jpeg">
+    <link rel="stylesheet" href="<?php echo CSS_URL; ?>config.php">
+    <link rel="stylesheet" href="<?php echo CSS_URL; ?>app.css">
 </head>
 <body>
     <!-- Header básico para otras páginas -->

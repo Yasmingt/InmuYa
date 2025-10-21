@@ -10,10 +10,30 @@ if (!defined('BASE_URL')) {
     $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
     
-    // Para este proyecto específico, usar la ruta correcta
-    $baseUrl = $protocol . '://' . $host . '/InmuYa/InmuYa-main/';
+    // Obtener el directorio del script actual
+    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+    
+    // Construir la URL base dinámicamente
+    $baseUrl = $protocol . '://' . $host . $scriptDir . '/';
+    
+    // Limpiar barras dobles
+    $baseUrl = str_replace('//', '/', $baseUrl);
+    $baseUrl = str_replace(':/', '://', $baseUrl);
     
     define('BASE_URL', $baseUrl);
+}
+
+// Definir rutas absolutas para recursos estáticos
+if (!defined('CSS_URL')) {
+    define('CSS_URL', BASE_URL . 'public/css/');
+}
+
+if (!defined('IMG_URL')) {
+    define('IMG_URL', BASE_URL . 'public/img/');
+}
+
+if (!defined('JS_URL')) {
+    define('JS_URL', BASE_URL . 'public/js/');
 }
 
 // Configuración de la base de datos
